@@ -8,3 +8,4 @@
 /.vscode
 /.zed
 Thumbs.db
+.env
