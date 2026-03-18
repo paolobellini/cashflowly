@@ -6,6 +6,7 @@
 /.nova
 /.phpunit.cache
 /.vscode
+/.vite
 /.zed
 Thumbs.db
 .env
