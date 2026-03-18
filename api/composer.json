@@ -81,13 +81,24 @@
         "coverage": "pest --coverage --min=90",
         "refactor": "rector",
         "analyse": "phpstan analyse --memory-limit=2G",
-        "check": [
-            "@lint",
-            "@test",
+        "check:lint": "pint --test",
+        "check:refactor": "rector --dry-run",
+        "tests": [
             "@type",
+            "@coverage"
+        ],
+        "check": [
+            "@check:lint",
             "@analyse",
-            "rector --dry-run"
+            "@check:refactor"
+        ],
+        "cleanup": [
+            "@lint",
+            "@tests",
+            "@analyse",
+            "@check:refactor"
         ]
+
     },
     "extra": {
         "laravel": {
