@@ -5,10 +5,19 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\DomainFactory;
+use DateTimeImmutable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stancl\Tenancy\Database\Models\Domain as DomainBase;
 
+/**
+ * @property-read int $id
+ * @property-read string $domain
+ * @property-read string $tenant_id
+ * @property-read DateTimeImmutable|null $created_at
+ * @property-read DateTimeImmutable|null $updated_at
+ * @property-read Tenant $tenant
+ */
 final class Domain extends DomainBase
 {
     /** @use HasFactory<DomainFactory> */
