@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Foundation\Http\Kernel;
+use Illuminate\Routing\Redirector;
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
@@ -19,7 +20,10 @@ final class TenancyServiceProvider extends ServiceProvider
 {
     public static string $controllerNamespace = '';
 
-    public function events()
+    /**
+     * @return array<class-string, list<JobPipeline|class-string>>
+     */
+    public function events(): array
     {
         return [
             Events\CreatingTenant::class => [],
@@ -82,24 +86,19 @@ final class TenancyServiceProvider extends ServiceProvider
         ];
     }
 
-    public function register()
+    public function boot(Dispatcher $dispatcher, Router $router, Redirector $redirector): void
     {
-        //
-    }
-
-    public function boot()
-    {
-        $this->bootEvents();
-        $this->mapRoutes();
+        $this->bootEvents($dispatcher);
+        $this->mapRoutes($router);
 
         $this->makeTenancyMiddlewareHighestPriority();
 
-        InitializeTenancyByDomain::$onFail = function () {
-            return redirect(env('APP_URL'));
+        InitializeTenancyByDomain::$onFail = function () use ($redirector) {
+            return $redirector->to(config()->string('app.url'));
         };
     }
 
-    protected function bootEvents()
+    protected function bootEvents(Dispatcher $dispatcher): void
     {
         foreach ($this->events() as $event => $listeners) {
             foreach ($listeners as $listener) {
@@ -107,22 +106,22 @@ final class TenancyServiceProvider extends ServiceProvider
                     $listener = $listener->toListener();
                 }
 
-                Event::listen($event, $listener);
+                $dispatcher->listen($event, $listener);
             }
         }
     }
 
-    protected function mapRoutes()
+    protected function mapRoutes(Router $router): void
     {
-        $this->app->booted(function () {
+        $this->app->booted(function () use ($router): void {
             if (file_exists(base_path('routes/tenant.php'))) {
-                Route::namespace(static::$controllerNamespace)
+                $router->namespace(static::$controllerNamespace)
                     ->group(base_path('routes/tenant.php'));
             }
         });
     }
 
-    protected function makeTenancyMiddlewareHighestPriority()
+    protected function makeTenancyMiddlewareHighestPriority(): void
     {
         $tenancyMiddleware = [
             Middleware\PreventAccessFromCentralDomains::class,
@@ -134,8 +133,11 @@ final class TenancyServiceProvider extends ServiceProvider
             Middleware\InitializeTenancyByRequestData::class,
         ];
 
+        /** @var Kernel $kernel */
+        $kernel = $this->app->make(Kernel::class);
+
         foreach (array_reverse($tenancyMiddleware) as $middleware) {
-            $this->app[Kernel::class]->prependToMiddlewarePriority($middleware);
+            $kernel->prependToMiddlewarePriority($middleware);
         }
     }
 }

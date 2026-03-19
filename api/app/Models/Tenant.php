@@ -16,11 +16,11 @@ final class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
 
-    /* @use HasFactory<TenantFactory> * */
+    /** @use HasFactory<TenantFactory> */
     use HasFactory;
 
     /**
-     * @return list<string>
+     * @return array<string, string>
      */
     public function casts(): array
     {
@@ -32,8 +32,19 @@ final class Tenant extends BaseTenant implements TenantWithDatabase
         ];
     }
 
+    /**
+     * @return HasOne<Domain, $this>
+     */
     public function domain(): HasOne
     {
         return $this->hasOne(Domain::class);
+    }
+
+    /**
+     * @return HasOne<User, $this>
+     */
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
     }
 }

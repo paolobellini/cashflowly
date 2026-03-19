@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\DomainFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stancl\Tenancy\Database\Models\Domain as DomainBase;
 
 final class Domain extends DomainBase
 {
-    /* @uses HasFactory<DomainFactory> * */
+    /** @use HasFactory<DomainFactory> */
     use HasFactory;
 
-    /***
-     * @return list<string>
+    /**
+     * @return array<string, string>
      */
     public function casts(): array
     {
@@ -27,6 +28,9 @@ final class Domain extends DomainBase
         ];
     }
 
+    /**
+     * @return BelongsTo<Tenant, $this>
+     */
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);

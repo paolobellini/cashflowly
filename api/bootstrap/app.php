@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Http\Middleware\CheckTenantHeader;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
-use App\Http\Middleware\CheckTenantHeader;
 use Illuminate\Foundation\Configuration\Middleware;
 
 return Application::configure(basePath: dirname(__DIR__))

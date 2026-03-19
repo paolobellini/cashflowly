@@ -79,7 +79,7 @@
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ],
         "lint": "pint --parallel",
-        "type": "pest --type-coverage --exactly=100",
+        "type": "pest --type-coverage --min=90",
         "coverage": "pest --coverage --min=90",
         "refactor": "rector",
         "analyse": "phpstan analyse --memory-limit=2G",

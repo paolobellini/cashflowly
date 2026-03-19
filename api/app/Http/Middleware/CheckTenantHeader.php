@@ -7,21 +7,22 @@ namespace App\Http\Middleware;
 use App\Models\Tenant;
 use App\Models\User;
 use Closure;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final readonly class CheckTenantHeader
 {
+    public function __construct(private readonly ResponseFactory $responseFactory) {}
+
     /**
-     * Handle an incoming request.
-     *
      * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $userId = $request->header('X-User-Id');
-        $tenantId = $request->header('X-Tenant-Id');
+        $userId = (string) $request->headers->get('X-User-Id', '');
+        $tenantId = (string) $request->headers->get('X-Tenant-Id', '');
 
         return $this->ensureHeadersArePresent($userId, $tenantId)
             ?? $this->ensureTenantExists($tenantId)
@@ -29,10 +30,10 @@ final readonly class CheckTenantHeader
             ?? $next($request);
     }
 
-    private function ensureHeadersArePresent(?string $userId, ?string $tenantId): ?JsonResponse
+    private function ensureHeadersArePresent(string $userId, string $tenantId): ?JsonResponse
     {
-        if (! $userId || ! $tenantId) {
-            return response()->json(['message' => 'Missing required tenant headers.'], Response::HTTP_FORBIDDEN);
+        if ($userId === '' || $tenantId === '') {
+            return $this->responseFactory->json(['message' => 'Missing required tenant headers.'], Response::HTTP_FORBIDDEN);
         }
 
         return null;
@@ -40,8 +41,8 @@ final readonly class CheckTenantHeader
 
     private function ensureTenantExists(string $tenantId): ?JsonResponse
     {
-        if (! Tenant::find($tenantId)) {
-            return response()->json(['message' => 'Tenant not found.'], Response::HTTP_NOT_FOUND);
+        if (! Tenant::query()->find($tenantId)) {
+            return $this->responseFactory->json(['message' => 'Tenant not found.'], Response::HTTP_NOT_FOUND);
         }
 
         return null;
@@ -49,8 +50,8 @@ final readonly class CheckTenantHeader
 
     private function ensureUserBelongsToTenant(string $userId, string $tenantId): ?JsonResponse
     {
-        if (! User::where('id', $userId)->where('tenant_id', $tenantId)->exists()) {
-            return response()->json(['message' => 'User not found for this tenant.'], Response::HTTP_FORBIDDEN);
+        if (! User::query()->where('id', $userId)->where('tenant_id', $tenantId)->exists()) {
+            return $this->responseFactory->json(['message' => 'User not found for this tenant.'], Response::HTTP_FORBIDDEN);
         }
 
         return null;
