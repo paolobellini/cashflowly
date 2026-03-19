@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Http\ValueObjects\ApiGatewayHeaders;
 use App\Models\Tenant;
 use App\Models\User;
 use Closure;
@@ -21,18 +22,17 @@ final readonly class CheckTenantHeader
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $userId = (string) $request->headers->get('X-User-Id', '');
-        $tenantId = (string) $request->headers->get('X-Tenant-Id', '');
+        $headers = ApiGatewayHeaders::fromRequest($request);
 
-        return $this->ensureHeadersArePresent($userId, $tenantId)
-            ?? $this->ensureTenantExists($tenantId)
-            ?? $this->ensureUserBelongsToTenant($userId, $tenantId)
+        return $this->ensureHeadersArePresent($headers)
+            ?? $this->ensureTenantExists($headers->tenantId ?? '')
+            ?? $this->ensureUserBelongsToTenant($headers->userId, $headers->tenantId ?? '')
             ?? $next($request);
     }
 
-    private function ensureHeadersArePresent(string $userId, string $tenantId): ?JsonResponse
+    private function ensureHeadersArePresent(ApiGatewayHeaders $headers): ?JsonResponse
     {
-        if ($userId === '' || $tenantId === '') {
+        if ($headers->userId === '' || $headers->tenantId === null || $headers->tenantId === '') {
             return $this->responseFactory->json(['message' => 'Missing required tenant headers.'], Response::HTTP_FORBIDDEN);
         }
 
