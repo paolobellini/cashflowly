@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Validator;
 function validData(array $overrides = []): array
 {
     return array_merge([
-        'name' => 'Paolo',
-        'surname' => 'Rossi',
+        'first_name' => 'Paolo',
+        'last_name' => 'Rossi',
         'company_name' => null,
         'domain' => 'paolo-finance',
     ], $overrides);
@@ -36,7 +36,7 @@ it('fails when required fields are missing', function (string $field) {
 
     expect($validator->fails())->toBeTrue()
         ->and($validator->errors()->has($field))->toBeTrue();
-})->with(['name', 'surname', 'domain']);
+})->with(['first_name', 'last_name', 'domain']);
 
 it('fails when domain has invalid format', function (string $domain) {
     $validator = Validator::make(validData(['domain' => $domain]), (new OnboardingRequest())->rules());
