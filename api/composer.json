@@ -13,6 +13,7 @@
         "laravel/framework": "^13.0",
         "laravel/octane": "^2.17",
         "laravel/tinker": "^3.0",
+        "nunomaduro/essentials": "^1.2",
         "predis/predis": "^3.4",
         "stancl/tenancy": "^3.10"
     },
