@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Domain;
 use App\Models\Tenant;
 
 it('has a domain', function () {

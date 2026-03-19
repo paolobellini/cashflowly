@@ -15,8 +15,22 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 final class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use HasDatabase, HasDomains;
+
     /* @use HasFactory<TenantFactory> * */
     use HasFactory;
+
+    /**
+     * @return list<string>
+     */
+    public function casts(): array
+    {
+        return [
+            'id' => 'string',
+            'created_at' => 'timestamp',
+            'updated_at' => 'timestamp',
+            'data' => 'array',
+        ];
+    }
 
     public function domain(): HasOne
     {

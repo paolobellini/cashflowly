@@ -13,7 +13,21 @@ final class Domain extends DomainBase
     /* @uses HasFactory<DomainFactory> * */
     use HasFactory;
 
-    public function tenant(): belongsTo
+    /***
+     * @return list<string>
+     */
+    public function casts(): array
+    {
+        return [
+            'id' => 'integer',
+            'domain' => 'string',
+            'tenant_id' => 'string',
+            'created_at' => 'timestamp',
+            'updated_at' => 'timestamp',
+        ];
+    }
+
+    public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
     }
