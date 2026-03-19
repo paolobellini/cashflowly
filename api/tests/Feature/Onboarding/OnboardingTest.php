@@ -57,17 +57,17 @@ it('fails when domain is already taken', function () {
         ->assertJsonValidationErrors(['domain']);
 });
 
-it('fails when domain has invalid format', function () {
+it('slugifies the domain before validation', function () {
     $response = $this->postJson('/api/onboarding', [
         'first_name' => 'Paolo',
         'last_name' => 'Rossi',
         'company_name' => null,
-        'domain' => 'INVALID DOMAIN!',
+        'domain' => 'My Workspace Name',
     ], [
         'X-User-Id' => 'cognito-uuid',
         'X-User-Email' => 'paolo@example.com',
     ]);
 
-    $response->assertUnprocessable()
-        ->assertJsonValidationErrors(['domain']);
+    $response->assertCreated()
+        ->assertJsonPath('data.domain', 'my-workspace-name');
 });
