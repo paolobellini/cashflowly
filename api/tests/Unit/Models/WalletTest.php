@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Models\Wallet;
 
 beforeEach(function () {
-    $this->tenancy = true;
     $this->initializeTenancy();
 });
 
