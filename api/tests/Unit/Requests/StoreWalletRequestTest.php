@@ -34,4 +34,3 @@ it('fails when required fields are missing', function (string $field) {
     expect($validator->fails())->toBeTrue()
         ->and($validator->errors()->has($field))->toBeTrue();
 })->with(['name', 'type', 'currency']);
-
