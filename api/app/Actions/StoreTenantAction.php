@@ -7,7 +7,6 @@ namespace App\Actions;
 use App\Http\ValueObjects\ApiGatewayHeaders;
 use App\Models\Tenant;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
 use Throwable;
 
 final readonly class StoreTenantAction
@@ -24,17 +23,20 @@ final readonly class StoreTenantAction
      */
     public function handle(ApiGatewayHeaders $headers, array $attributes): Tenant
     {
-        /** @var Tenant */
-        return DB::transaction(function () use ($headers, $attributes): Tenant {
-            $tenant = Tenant::query()->create();
+        $tenant = Tenant::query()->create();
 
+        try {
             $this->attachDomainToTenantAction->handle($tenant, $attributes['domain']);
 
             /** @var array<string, mixed> $userAttributes */
             $userAttributes = Arr::except($attributes, 'domain');
             $this->storeUserAction->handle($tenant, $headers, $userAttributes);
+        } catch (Throwable $e) {
+            $tenant->delete();
 
-            return $tenant;
-        });
+            throw $e;
+        }
+
+        return $tenant;
     }
 }

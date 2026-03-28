@@ -9,7 +9,7 @@ use App\Models\Tenant;
 use App\Models\User;
 
 it('creates a tenant with domain and user', function () {
-    $headers = new ApiGatewayHeaders(userId: 'cognito-uuid', userEmail: 'paolo@example.com');
+    $headers = new ApiGatewayHeaders(userId: FAKE_USER_ID, userEmail: FAKE_USER_EMAIL);
 
     resolve(StoreTenantAction::class)->handle($headers, [
         'first_name' => 'Paolo',
@@ -22,14 +22,14 @@ it('creates a tenant with domain and user', function () {
 
     expect($tenant)->not->toBeNull()
         ->and(Domain::query()->where('tenant_id', $tenant->id)->where('domain', 'paolo-finance')->exists())->toBeTrue()
-        ->and(User::query()->where('id', 'cognito-uuid')->where('tenant_id', $tenant->id)->exists())->toBeTrue();
+        ->and(User::query()->where('id', FAKE_USER_ID)->where('tenant_id', $tenant->id)->exists())->toBeTrue();
 });
 
 it('rolls back everything if user creation fails', function () {
-    $headers = new ApiGatewayHeaders(userId: 'cognito-uuid', userEmail: 'paolo@example.com');
+    $headers = new ApiGatewayHeaders(userId: FAKE_USER_ID, userEmail: FAKE_USER_EMAIL);
 
     $existingTenant = Tenant::factory()->create();
-    User::factory()->create(['id' => 'cognito-uuid', 'tenant_id' => $existingTenant->id]);
+    User::factory()->create(['id' => FAKE_USER_ID, 'tenant_id' => $existingTenant->id]);
 
     $tenantCountBefore = Tenant::query()->count();
     $domainCountBefore = Domain::query()->count();

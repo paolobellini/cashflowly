@@ -14,7 +14,7 @@ beforeEach(function (): void {
 
 it('creates a user for a tenant', function () {
     $tenant = Tenant::factory()->create();
-    $headers = new ApiGatewayHeaders(userId: 'cognito-uuid', userEmail: 'paolo@example.com');
+    $headers = new ApiGatewayHeaders(userId: FAKE_USER_ID, userEmail: FAKE_USER_EMAIL);
 
     resolve(StoreUserAction::class)->handle($tenant, $headers, [
         'first_name' => 'Paolo',
@@ -22,11 +22,11 @@ it('creates a user for a tenant', function () {
         'company_name' => 'Acme Corp',
     ]);
 
-    $user = User::query()->where('id', 'cognito-uuid')->first();
+    $user = User::query()->where('id', FAKE_USER_ID)->first();
 
     expect($user)->not->toBeNull()
         ->and($user->tenant_id)->toBe($tenant->id)
-        ->and($user->email)->toBe('paolo@example.com')
+        ->and($user->email)->toBe(FAKE_USER_EMAIL)
         ->and($user->first_name)->toBe('Paolo')
         ->and($user->last_name)->toBe('Rossi')
         ->and($user->company_name)->toBe('Acme Corp');
