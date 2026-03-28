@@ -9,7 +9,7 @@ use App\Rules\HasDefaultWallet;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class StoreWalletRequest extends FormRequest
+final class UpdateWalletRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -21,8 +21,11 @@ final class StoreWalletRequest extends FormRequest
      */
     public function after(): array
     {
+        /** @var string $walletId */
+        $walletId = $this->route('wallet');
+
         return [
-            new HasDefaultWallet(),
+            new HasDefaultWallet($walletId),
         ];
     }
 
@@ -34,7 +37,6 @@ final class StoreWalletRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:2', 'max:150'],
             'type' => ['required', 'string', Rule::enum(WalletType::class)],
-            'currency' => ['required', 'string', 'size:3'],
             'initial_balance' => ['nullable', 'numeric', 'min:0'],
             'is_default' => ['nullable', 'boolean'],
             'color' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],

@@ -13,7 +13,7 @@ final readonly class HasDefaultWallet
 
     public function __invoke(Validator $validator): void
     {
-        if ($validator->safe()->boolean('is_default') === false) {
+        if ((bool) $validator->getValue('is_default') === false) {
             return;
         }
 
