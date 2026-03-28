@@ -25,7 +25,7 @@ it('creates a tenant with domain and user', function () {
         ->and(User::query()->where('id', FAKE_USER_ID)->where('tenant_id', $tenant->id)->exists())->toBeTrue();
 });
 
-it('rolls back everything if user creation fails', function () {
+it('cleans up tenant and domain if user creation fails', function () {
     $headers = new ApiGatewayHeaders(userId: FAKE_USER_ID, userEmail: FAKE_USER_EMAIL);
 
     $existingTenant = Tenant::factory()->create();
@@ -45,5 +45,6 @@ it('rolls back everything if user creation fails', function () {
     }
 
     expect(Tenant::query()->count())->toBe($tenantCountBefore)
-        ->and(Domain::query()->count())->toBe($domainCountBefore);
+        ->and(Domain::query()->count())->toBe($domainCountBefore)
+        ->and(User::query()->where('id', FAKE_USER_ID)->count())->toBe(1);
 });

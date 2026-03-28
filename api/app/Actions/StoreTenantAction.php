@@ -32,6 +32,7 @@ final readonly class StoreTenantAction
             $userAttributes = Arr::except($attributes, 'domain');
             $this->storeUserAction->handle($tenant, $headers, $userAttributes);
         } catch (Throwable $e) {
+            $tenant->domain->delete();
             $tenant->delete();
 
             throw $e;
