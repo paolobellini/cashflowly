@@ -17,4 +17,5 @@ Route::middleware([
     });
 
     Route::post('/wallets', [WalletController::class, 'store'])->name('wallets.store');
+    Route::put('/wallets/{wallet}', [WalletController::class, 'update'])->name('wallets.update');
 });
