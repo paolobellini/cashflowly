@@ -30,6 +30,8 @@ final class Wallet extends Model
 
     use HasUuids;
 
+    protected $keyType = 'string';
+
     /**
      * @return array<string, string>
      */

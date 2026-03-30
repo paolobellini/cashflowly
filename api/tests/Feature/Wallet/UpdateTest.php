@@ -25,10 +25,7 @@ it('can update a wallet', function () {
 
     $response->assertOk();
 
-    $this->assertDatabaseHas('wallets', [
-        'id' => $wallet->id,
-        'name' => 'New Name',
-    ], 'tenant');
+    $this->assertDatabaseHas('wallets', ['id' => $wallet->id, 'name' => 'New Name']);
 
     Log::shouldHaveReceived('info')->once();
 });

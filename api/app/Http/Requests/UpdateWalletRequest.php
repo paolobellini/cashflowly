@@ -21,11 +21,11 @@ final class UpdateWalletRequest extends FormRequest
      */
     public function after(): array
     {
-        /** @var string $walletId */
-        $walletId = $this->route('wallet');
+        /** @var Wallet $wallet */
+        $wallet = $this->route('wallet');
 
         return [
-            new HasDefaultWallet($walletId),
+            new HasDefaultWallet($wallet->id),
         ];
     }
 

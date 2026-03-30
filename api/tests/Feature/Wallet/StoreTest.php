@@ -18,8 +18,8 @@ it('can store a wallet', function () {
 
     $response->assertCreated();
 
-    expect(Wallet::query()->count())->toBe(1)
-        ->and(Wallet::query()->where('name', $attributes['name'])->exists())->toBeTrue();
+    $this->assertDatabaseCount('wallets', 1)
+        ->assertDatabaseHas('wallets', ['name' => $attributes['name']]);
 
     Log::shouldHaveReceived('info')->once();
 });
