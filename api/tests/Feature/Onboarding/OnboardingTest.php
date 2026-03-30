@@ -12,8 +12,8 @@ it('can create a new tenant with proper domain', function () {
         'company_name' => null,
         'domain' => 'paolo-finance',
     ], [
-        'X-User-Id' => 'cognito-uuid',
-        'X-User-Email' => 'paolo@example.com',
+        'X-User-Id' => FAKE_USER_ID,
+        'X-User-Email' => FAKE_USER_EMAIL,
     ]);
 
     $response->assertCreated()
@@ -25,14 +25,14 @@ it('can create a new tenant with proper domain', function () {
             ],
         ])
         ->assertJsonPath('data.domain', 'paolo-finance')
-        ->assertJsonPath('data.user.id', 'cognito-uuid')
-        ->assertJsonPath('data.user.email', 'paolo@example.com');
+        ->assertJsonPath('data.user.id', FAKE_USER_ID)
+        ->assertJsonPath('data.user.email', FAKE_USER_EMAIL);
 });
 
 it('fails when required fields are missing', function () {
     $response = $this->postJson('/api/onboarding', [], [
-        'X-User-Id' => 'cognito-uuid',
-        'X-User-Email' => 'paolo@example.com',
+        'X-User-Id' => FAKE_USER_ID,
+        'X-User-Email' => FAKE_USER_EMAIL,
     ]);
 
     $response->assertUnprocessable()
@@ -49,8 +49,8 @@ it('fails when domain is already taken', function () {
         'company_name' => null,
         'domain' => 'taken-domain',
     ], [
-        'X-User-Id' => 'cognito-uuid',
-        'X-User-Email' => 'paolo@example.com',
+        'X-User-Id' => FAKE_USER_ID,
+        'X-User-Email' => FAKE_USER_EMAIL,
     ]);
 
     $response->assertUnprocessable()
@@ -64,8 +64,8 @@ it('slugifies the domain before validation', function () {
         'company_name' => null,
         'domain' => 'My Workspace Name',
     ], [
-        'X-User-Id' => 'cognito-uuid',
-        'X-User-Email' => 'paolo@example.com',
+        'X-User-Id' => FAKE_USER_ID,
+        'X-User-Email' => FAKE_USER_EMAIL,
     ]);
 
     $response->assertCreated()

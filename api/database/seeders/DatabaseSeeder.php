@@ -15,7 +15,8 @@ final class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->create([
-            'name' => 'Test User',
+            'first_name' => 'Paolo',
+            'last_name' => 'Bellini',
             'email' => 'test@example.com',
         ]);
     }

@@ -14,6 +14,21 @@ jobs:
       run:
         working-directory: api
 
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: cashflowly_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U root -d cashflowly_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: checkout code
         uses: actions/checkout@v6
@@ -22,7 +37,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.5
-          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite, xdebug
+          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite, pgsql, pdo_pgsql, xdebug
           coverage: xdebug
 
       - name: cache composer dependencies
@@ -40,3 +55,5 @@ jobs:
 
       - name: run command
         run: ${{ inputs.command }}
+        env:
+          DB_HOST: 127.0.0.1

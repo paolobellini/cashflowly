@@ -7,10 +7,12 @@ use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 beforeEach(function (): void {
     Event::fake();
+    Log::spy();
 });
 
 function createRequest(?string $userId = null, ?string $tenantId = null): Response
@@ -35,24 +37,32 @@ it('can validate the request', function () {
     $response = createRequest((string) $user->id, $tenant->id);
 
     expect($response->getStatusCode())->toBe(Response::HTTP_OK);
+
+    Log::shouldNotHaveReceived('warning');
 });
 
 it('can reject the request if no tenant_id is provided', function () {
     $response = createRequest(userId: 'some-user-id');
 
     expect($response->getStatusCode())->toBe(Response::HTTP_FORBIDDEN);
+
+    Log::shouldHaveReceived('warning')->once();
 });
 
 it('can reject the request if no user_id is provided', function () {
     $response = createRequest(tenantId: 'some-tenant-id');
 
     expect($response->getStatusCode())->toBe(Response::HTTP_FORBIDDEN);
+
+    Log::shouldHaveReceived('warning')->once();
 });
 
 it('can reject the request if tenant does not exist', function () {
     $response = createRequest('some-user-id', 'non-existent-tenant-id');
 
     expect($response->getStatusCode())->toBe(Response::HTTP_NOT_FOUND);
+
+    Log::shouldHaveReceived('warning')->once();
 });
 
 it('can reject the request if the tenant doesn\'t belong to the user', function () {
@@ -62,4 +72,6 @@ it('can reject the request if the tenant doesn\'t belong to the user', function 
     $response = createRequest((string) $user->id, $tenant->id);
 
     expect($response->getStatusCode())->toBe(Response::HTTP_FORBIDDEN);
+
+    Log::shouldHaveReceived('warning')->once();
 });
