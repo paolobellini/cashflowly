@@ -12,10 +12,16 @@ use App\Http\Requests\UpdateWalletRequest;
 use App\Http\Resources\WalletResource;
 use App\Models\Wallet;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
 
 final class WalletController extends Controller
 {
+    public function index(): AnonymousResourceCollection
+    {
+        return WalletResource::collection(Wallet::all());
+    }
+
     public function store(StoreWalletRequest $request, StoreWalletAction $action): JsonResponse
     {
         /** @var array<string, mixed> $validated */

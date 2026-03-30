@@ -18,6 +18,7 @@ Route::middleware([
         return 'This is your multi-tenant application. The id of the current tenant is '.tenant('id');
     });
 
+    Route::get('/wallets', [WalletController::class, 'index'])->name('wallets.index');
     Route::post('/wallets', [WalletController::class, 'store'])->name('wallets.store');
     Route::put('/wallets/{wallet}', [WalletController::class, 'update'])->name('wallets.update');
     Route::delete('/wallets/{wallet}', [WalletController::class, 'destroy'])->name('wallets.destroy');
