@@ -25,4 +25,5 @@ Route::middleware([
     Route::delete('/wallets/{wallet}', [WalletController::class, 'destroy'])->name('wallets.destroy');
 
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
