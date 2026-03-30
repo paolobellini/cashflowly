@@ -6,7 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\DestroyCategoryAction;
 use App\Actions\StoreCategoryAction;
+use App\Actions\UpdateCategoryAction;
 use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
@@ -23,6 +25,16 @@ final class CategoryController extends Controller
         return new CategoryResource($category)
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
+    }
+
+    public function update(UpdateCategoryRequest $request, Category $category, UpdateCategoryAction $action): JsonResponse
+    {
+        /** @var array<string, mixed> $validated */
+        $validated = $request->validated();
+
+        return new CategoryResource($action->handle($category, $validated))
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 
     public function destroy(Category $category, DestroyCategoryAction $action): JsonResponse
