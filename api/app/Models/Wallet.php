@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\WalletType;
+use App\Observers\WalletObserver;
 use Database\Factories\WalletFactory;
 use DateTimeImmutable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read DateTimeImmutable|null $created_at
  * @property-read DateTimeImmutable|null $updated_at
  */
+#[ObservedBy(WalletObserver::class)]
 final class Wallet extends Model
 {
     /** @use HasFactory<WalletFactory> */
