@@ -33,7 +33,7 @@ final class Category extends Model
     /**
      * @param  Builder<Category>  $query
      */
-    public function scopeOfType(Builder $query, CategoryType $type): void
+    protected function scopeOfType(Builder $query, CategoryType $type): void
     {
         $query->where('type', $type);
     }
