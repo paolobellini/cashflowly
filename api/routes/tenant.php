@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Route;
@@ -22,4 +23,6 @@ Route::middleware([
     Route::post('/wallets', [WalletController::class, 'store'])->name('wallets.store');
     Route::put('/wallets/{wallet}', [WalletController::class, 'update'])->name('wallets.update');
     Route::delete('/wallets/{wallet}', [WalletController::class, 'destroy'])->name('wallets.destroy');
+
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
 });
