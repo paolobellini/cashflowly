@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\DestroyWalletAction;
 use App\Actions\StoreWalletAction;
 use App\Actions\UpdateWalletAction;
 use App\Http\Requests\StoreWalletRequest;
@@ -26,16 +27,20 @@ final class WalletController extends Controller
             ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function update(UpdateWalletRequest $request, string $wallet, UpdateWalletAction $action): JsonResponse
+    public function update(UpdateWalletRequest $request, Wallet $wallet, UpdateWalletAction $action): JsonResponse
     {
         /** @var array<string, mixed> $validated */
         $validated = $request->validated();
 
-        /** @var Wallet $walletModel */
-        $walletModel = Wallet::query()->findOrFail($wallet);
-
-        return new WalletResource($action->handle($walletModel, $validated))
+        return new WalletResource($action->handle($wallet, $validated))
             ->response()
             ->setStatusCode(Response::HTTP_OK);
+    }
+
+    public function destroy(Wallet $wallet, DestroyWalletAction $action): JsonResponse
+    {
+        $action->handle($wallet);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
