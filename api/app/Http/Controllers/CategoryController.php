@@ -12,6 +12,7 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,7 @@ final class CategoryController extends Controller
     public function index(Request $request): JsonResponse
     {
         $categories = Category::query()
-            ->when($request->has('type'), fn ($query) => $query->ofType(CategoryType::from($request->string('type')->toString())))
+            ->when($request->has('type'), fn (Builder $query) => $query->ofType(CategoryType::from($request->string('type')->toString())))
             ->get();
 
         return CategoryResource::collection($categories)
