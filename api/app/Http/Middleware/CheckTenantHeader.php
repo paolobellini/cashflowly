@@ -11,6 +11,7 @@ use Closure;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 final readonly class CheckTenantHeader
@@ -33,6 +34,8 @@ final readonly class CheckTenantHeader
     private function ensureHeadersArePresent(ApiGatewayHeaders $headers): ?JsonResponse
     {
         if ($headers->userId === '' || $headers->tenantId === null || $headers->tenantId === '') {
+            Log::warning('Missing required tenant headers');
+
             return $this->responseFactory->json(['message' => 'Missing required tenant headers.'], Response::HTTP_FORBIDDEN);
         }
 
@@ -42,6 +45,8 @@ final readonly class CheckTenantHeader
     private function ensureTenantExists(string $tenantId): ?JsonResponse
     {
         if (! Tenant::query()->find($tenantId)) {
+            Log::warning('Tenant not found', ['tenant_id' => $tenantId]);
+
             return $this->responseFactory->json(['message' => 'Tenant not found.'], Response::HTTP_NOT_FOUND);
         }
 
@@ -51,6 +56,8 @@ final readonly class CheckTenantHeader
     private function ensureUserBelongsToTenant(string $userId, string $tenantId): ?JsonResponse
     {
         if (! User::query()->where('id', $userId)->where('tenant_id', $tenantId)->exists()) {
+            Log::warning('User not found for tenant', ['user_id' => $userId, 'tenant_id' => $tenantId]);
+
             return $this->responseFactory->json(['message' => 'User not found for this tenant.'], Response::HTTP_FORBIDDEN);
         }
 

@@ -93,6 +93,27 @@ php artisan test --compact --filter=testName
 - All classes should be `final readonly` when possible
 - Run `vendor/bin/pint --dirty --format agent` after modifying PHP files
 
+## Code Conventions
+
+### Models
+- Cast **all** fields explicitly in the `casts()` method, not just non-string types
+
+### Enums
+- Every enum must have a `label(): string` method that returns a human-readable label
+- Use `match` expression for label mapping
+
+### Pest Testing
+- Enum tests: verify all cases by index (`cases()[0]`, `cases()[1]`, etc.) — don't hardcode the count in the test title
+- Use generic test names (e.g., "it has the expected cases" not "it has 5 cases")
+- For label tests: iterate over `::cases()` dynamically with `->with()`, assert `toBeString()->not->toBeEmpty()`
+- Chain assertions using `->and()` for related checks in the same test
+
+### Jira
+- Project key: CFW on bellini.atlassian.net
+- Cloud ID: `edb9af39-1c29-4229-b847-5d71ce55e973`
+- User stories as Story type, implementation tasks as Subtasks under the story
+- Assignee account ID: `712020:ed6f0b7b-b160-4631-b0fd-a6459274400c`
+
 ## Additional Guidelines
 
 See `api/CLAUDE.md` for detailed Laravel Boost guidelines covering PHP conventions, Laravel patterns, Pest testing, and Pint formatting rules.
