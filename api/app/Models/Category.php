@@ -7,6 +7,8 @@ namespace App\Models;
 use App\Enums\CategoryType;
 use Database\Factories\CategoryFactory;
 use DateTimeImmutable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +30,16 @@ final class Category extends Model
     use HasUuids;
 
     protected $keyType = 'string';
+
+    /**
+     * @param  Builder<Category>  $query
+     * @return Builder<Category>
+     */
+    #[Scope]
+    public function ofType(Builder $query, CategoryType $type): Builder
+    {
+        return $query->where('type', $type);
+    }
 
     /**
      * @return array<string, string>

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\CategoryType;
 use App\Models\Category;
 
 beforeEach(function () {
@@ -20,4 +21,11 @@ it('uses the correct keys', function () {
         'created_at',
         'updated_at',
     ]);
+});
+
+it('can filter by type', function () {
+    Category::factory()->create(['type' => CategoryType::Income]);
+    Category::factory()->create(['type' => CategoryType::Expense]);
+
+    expect(Category::query()->ofType(CategoryType::Income)->count())->toBe(1);
 });
