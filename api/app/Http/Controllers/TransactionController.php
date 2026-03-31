@@ -16,6 +16,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class TransactionController extends Controller
 {
+    public function show(Transaction $transaction): JsonResponse
+    {
+        return new TransactionResource($transaction)
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
+    }
+
     public function store(StoreTransactionRequest $request, StoreTransactionAction $action): JsonResponse
     {
         /** @var array<string, mixed> $validated */
