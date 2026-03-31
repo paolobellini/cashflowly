@@ -33,3 +33,32 @@ it('has many transactions', function () {
 
     expect($wallet->transactions->count())->toBe(3);
 });
+
+it('computes total income from transactions', function () {
+    $wallet = Wallet::factory()->create();
+
+    Transaction::factory()->for($wallet)->income()->create(['amount' => 500]);
+    Transaction::factory()->for($wallet)->income()->create(['amount' => 300]);
+    Transaction::factory()->for($wallet)->expense()->create(['amount' => 100]);
+
+    expect($wallet->total_income)->toBe(800.0);
+});
+
+it('computes total expenses from transactions', function () {
+    $wallet = Wallet::factory()->create();
+
+    Transaction::factory()->for($wallet)->expense()->create(['amount' => 200]);
+    Transaction::factory()->for($wallet)->expense()->create(['amount' => 150]);
+    Transaction::factory()->for($wallet)->income()->create(['amount' => 500]);
+
+    expect($wallet->total_expenses)->toBe(350.0);
+});
+
+it('computes balance from initial balance and transactions', function () {
+    $wallet = Wallet::factory()->create(['initial_balance' => 1000]);
+
+    Transaction::factory()->for($wallet)->income()->create(['amount' => 500]);
+    Transaction::factory()->for($wallet)->expense()->create(['amount' => 200]);
+
+    expect($wallet->balance)->toBe(1300.0);
+});

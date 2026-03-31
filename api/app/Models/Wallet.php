@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\TransactionType;
 use App\Enums\WalletType;
 use App\Observers\WalletObserver;
 use Database\Factories\WalletFactory;
 use DateTimeImmutable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +26,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read string $color
  * @property-read string|null $description
  * @property-read DateTimeImmutable|null $created_at
+ * @property-read float $total_income
+ * @property-read float $total_expenses
+ * @property-read float $balance
  * @property-read DateTimeImmutable|null $updated_at
  */
 #[ObservedBy(WalletObserver::class)]
@@ -42,6 +47,34 @@ final class Wallet extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * @return Attribute<float, never>
+     */
+    public function totalIncome(): Attribute
+    {
+        return Attribute::get(fn (): float => (float) $this->transactions()
+            ->where('type', TransactionType::Income)
+            ->sum('amount'));
+    }
+
+    /**
+     * @return Attribute<float, never>
+     */
+    public function totalExpenses(): Attribute
+    {
+        return Attribute::get(fn (): float => (float) $this->transactions()
+            ->where('type', TransactionType::Expense)
+            ->sum('amount'));
+    }
+
+    /**
+     * @return Attribute<float, never>
+     */
+    public function balance(): Attribute
+    {
+        return Attribute::get(fn (): float => (float) $this->initial_balance + $this->total_income - $this->total_expenses);
     }
 
     /**
