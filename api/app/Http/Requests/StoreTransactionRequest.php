@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Enums\TransactionType;
+use App\Rules\HasSufficientBalance;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,7 +25,7 @@ final class StoreTransactionRequest extends FormRequest
             'wallet_id' => ['required', 'uuid', 'exists:wallets,id'],
             'category_id' => ['required', 'uuid', 'exists:categories,id'],
             'type' => ['required', 'string', Rule::enum(TransactionType::class)],
-            'amount' => ['required', 'numeric', 'gt:0'],
+            'amount' => ['required', 'numeric', 'gt:0', new HasSufficientBalance()],
             'date' => ['required', 'date'],
             'description' => ['required', 'string', 'min:2', 'max:255'],
             'notes' => ['nullable', 'string', 'max:1000'],
