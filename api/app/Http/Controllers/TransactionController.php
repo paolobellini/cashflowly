@@ -11,11 +11,28 @@ use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class TransactionController extends Controller
 {
+    public function index(Request $request): JsonResponse
+    {
+        $transactions = Transaction::query()
+            ->when($request->has('category_id'), fn (Builder $query) => $query->ofCategory($request->string('category_id')->toString()))
+            ->when($request->has('month'), fn (Builder $query) => $query->ofMonth((int) $request->integer('month')))
+            ->when($request->has('year'), fn (Builder $query) => $query->ofYear((int) $request->integer('year')))
+            ->when($request->has('date'), fn (Builder $query) => $query->ofDate($request->string('date')->toString()))
+            ->latest('date')
+            ->paginate(25);
+
+        return TransactionResource::collection($transactions)
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
+    }
+
     public function show(Transaction $transaction): JsonResponse
     {
         return new TransactionResource($transaction)

@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Models\Category;
 use App\Models\Transaction;
-use App\Models\Wallet;
 use Illuminate\Support\Facades\Log;
 
 beforeEach(function () {

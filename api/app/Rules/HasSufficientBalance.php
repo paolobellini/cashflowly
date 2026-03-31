@@ -24,8 +24,6 @@ final readonly class HasSufficientBalance
         /** @var Wallet $wallet */
         $wallet = Wallet::query()->find($validator->getValue('wallet_id'));
 
-        if ($validator->getValue('amount') > $wallet->balance) {
-            throw new InsufficientBalanceException();
-        }
+        throw_if($validator->getValue('amount') > $wallet->balance, InsufficientBalanceException::class);
     }
 }

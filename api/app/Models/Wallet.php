@@ -52,7 +52,7 @@ final class Wallet extends Model
     /**
      * @return Attribute<float, never>
      */
-    public function totalIncome(): Attribute
+    protected function totalIncome(): Attribute
     {
         return Attribute::get(fn (): float => (float) $this->transactions()
             ->where('type', TransactionType::Income)
@@ -62,7 +62,7 @@ final class Wallet extends Model
     /**
      * @return Attribute<float, never>
      */
-    public function totalExpenses(): Attribute
+    protected function totalExpenses(): Attribute
     {
         return Attribute::get(fn (): float => (float) $this->transactions()
             ->where('type', TransactionType::Expense)
@@ -72,7 +72,7 @@ final class Wallet extends Model
     /**
      * @return Attribute<float, never>
      */
-    public function balance(): Attribute
+    protected function balance(): Attribute
     {
         return Attribute::get(fn (): float => (float) $this->initial_balance + $this->total_income - $this->total_expenses);
     }
