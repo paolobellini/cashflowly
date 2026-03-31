@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\TransactionType;
 use Database\Factories\TransactionFactory;
 use DateTimeImmutable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -47,6 +48,30 @@ final class Transaction extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * @param  Builder<Transaction>  $query
+     */
+    protected function scopeOfMonth(Builder $query, int $month): void
+    {
+        $query->whereMonth('date', $month);
+    }
+
+    /**
+     * @param  Builder<Transaction>  $query
+     */
+    protected function scopeOfYear(Builder $query, int $year): void
+    {
+        $query->whereYear('date', $year);
+    }
+
+    /**
+     * @param  Builder<Transaction>  $query
+     */
+    protected function scopeOfDate(Builder $query, string $date): void
+    {
+        $query->whereDate('date', $date);
     }
 
     /**

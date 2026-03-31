@@ -42,3 +42,24 @@ it('belongs to a category', function () {
     expect(Category::query()->count())->toBe(1)
         ->and($transaction->category_id)->toBe($category->id);
 });
+
+it('can filter by month', function () {
+    Transaction::factory()->create(['date' => '2026-03-15']);
+    Transaction::factory()->create(['date' => '2026-04-10']);
+
+    expect(Transaction::query()->ofMonth(3)->count())->toBe(1);
+});
+
+it('can filter by year', function () {
+    Transaction::factory()->create(['date' => '2026-03-15']);
+    Transaction::factory()->create(['date' => '2025-03-15']);
+
+    expect(Transaction::query()->ofYear(2026)->count())->toBe(1);
+});
+
+it('can filter by date', function () {
+    Transaction::factory()->create(['date' => '2026-03-15']);
+    Transaction::factory()->create(['date' => '2026-03-16']);
+
+    expect(Transaction::query()->ofDate('2026-03-15')->count())->toBe(1);
+});
