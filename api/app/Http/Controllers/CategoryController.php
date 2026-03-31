@@ -45,8 +45,9 @@ final class CategoryController extends Controller
     {
         /** @var array<string, mixed> $validated */
         $validated = $request->validated();
+        $category = $action->handle($category, $validated);
 
-        return new CategoryResource($action->handle($category, $validated))
+        return new CategoryResource($category)
             ->response()
             ->setStatusCode(Response::HTTP_OK);
     }

@@ -39,8 +39,9 @@ final class WalletController extends Controller
     {
         /** @var array<string, mixed> $validated */
         $validated = $request->validated();
+        $wallet = $action->handle($wallet, $validated);
 
-        return new WalletResource($action->handle($wallet, $validated))
+        return new WalletResource($wallet)
             ->response()
             ->setStatusCode(Response::HTTP_OK);
     }
