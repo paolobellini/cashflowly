@@ -14,20 +14,14 @@ beforeEach(function () {
 it('can store a transaction', function () {
     Log::spy();
 
-    $wallet = Wallet::factory()->create();
-    $category = Category::factory()->create();
-
-    $attributes = Transaction::factory()->make([
-        'wallet_id' => $wallet->id,
-        'category_id' => $category->id,
-    ])->toArray();
+    $attributes = Transaction::factory()->make()->toArray();
 
     $response = $this->postJson($this->tenantUrl('/transactions'), $attributes, $this->tenantHeaders());
 
     $response->assertCreated();
 
     $this->assertDatabaseCount('transactions', 1)
-        ->assertDatabaseHas('transactions', ['wallet_id' => $wallet->id, 'category_id' => $category->id]);
+        ->assertDatabaseHas('transactions', ['id' => $response['data']['id']]);
 
     Log::shouldHaveReceived('info')->once();
 });

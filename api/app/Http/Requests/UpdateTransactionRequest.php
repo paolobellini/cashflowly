@@ -9,7 +9,7 @@ use App\Rules\HasSufficientBalance;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class StoreTransactionRequest extends FormRequest
+final class UpdateTransactionRequest extends FormRequest
 {
     public function authorize(): bool
     {

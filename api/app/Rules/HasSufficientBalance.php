@@ -7,35 +7,24 @@ namespace App\Rules;
 use App\Enums\TransactionType;
 use App\Exceptions\InsufficientBalanceException;
 use App\Models\Wallet;
-use Closure;
-use Illuminate\Contracts\Validation\DataAwareRule;
-use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Validator;
 
-final class HasSufficientBalance implements DataAwareRule, ValidationRule
+final readonly class HasSufficientBalance
 {
-    /** @var array<string, mixed> */
-    private array $data = [];
-
-    /**
-     * @param  array<string, mixed>  $data
-     */
-    public function setData(array $data): static
+    public function __invoke(Validator $validator): void
     {
-        $this->data = $data;
+        if ($validator->errors()->isNotEmpty()) {
+            return;
+        }
 
-        return $this;
-    }
-
-    public function validate(string $attribute, mixed $value, Closure $fail): void
-    {
-        if ($this->data['type'] !== TransactionType::Expense->value) {
+        if ($validator->getValue('type') !== TransactionType::Expense->value) {
             return;
         }
 
         /** @var Wallet $wallet */
-        $wallet = Wallet::query()->find($this->data['wallet_id']);
+        $wallet = Wallet::query()->find($validator->getValue('wallet_id'));
 
-        if (is_numeric($value) && (float) $value > $wallet->balance) {
+        if ($validator->getValue('amount') > $wallet->balance) {
             throw new InsufficientBalanceException();
         }
     }
