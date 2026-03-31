@@ -30,4 +30,14 @@ final class TransactionFactory extends Factory
             'notes' => fake()->optional()->sentence(),
         ];
     }
+
+    public function income(): static
+    {
+        return $this->state(['type' => TransactionType::Income]);
+    }
+
+    public function expense(): static
+    {
+        return $this->state(['type' => TransactionType::Expense]);
+    }
 }
