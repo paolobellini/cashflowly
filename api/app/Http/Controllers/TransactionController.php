@@ -6,7 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\DestroyTransactionAction;
 use App\Actions\StoreTransactionAction;
+use App\Actions\UpdateTransactionAction;
 use App\Http\Requests\StoreTransactionRequest;
+use App\Http\Requests\UpdateTransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
@@ -23,6 +25,17 @@ final class TransactionController extends Controller
         return new TransactionResource($transaction)
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
+    }
+
+    public function update(UpdateTransactionRequest $request, Transaction $transaction, UpdateTransactionAction $action): JsonResponse
+    {
+        /** @var array<string, mixed> $validated */
+        $validated = $request->validated();
+        $transaction = $action->handle($transaction, $validated);
+
+        return new TransactionResource($transaction)
+            ->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 
     public function destroy(Transaction $transaction, DestroyTransactionAction $action): JsonResponse
