@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Transaction;
 use App\Models\Wallet;
 
 beforeEach(function () {
@@ -23,4 +24,12 @@ it('uses the correct keys', function () {
         'created_at',
         'updated_at',
     ]);
+});
+
+it('has many transactions', function () {
+    $wallet = Wallet::factory()->create();
+
+    Transaction::factory()->for($wallet)->count(3)->create();
+
+    expect($wallet->transactions->count())->toBe(3);
 });
