@@ -43,6 +43,15 @@ it('belongs to a category', function () {
         ->and($transaction->category_id)->toBe($category->id);
 });
 
+it('can filter by category', function () {
+    $category = Category::factory()->create();
+
+    Transaction::factory()->for($category)->create();
+    Transaction::factory()->create();
+
+    expect(Transaction::query()->ofCategory($category->id)->count())->toBe(1);
+});
+
 it('can filter by month', function () {
     Transaction::factory()->create(['date' => '2026-03-15']);
     Transaction::factory()->create(['date' => '2026-04-10']);

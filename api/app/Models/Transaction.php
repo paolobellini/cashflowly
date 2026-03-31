@@ -53,6 +53,14 @@ final class Transaction extends Model
     /**
      * @param  Builder<Transaction>  $query
      */
+    protected function scopeOfCategory(Builder $query, string $categoryId): void
+    {
+        $query->whereRelation('category', 'id', $categoryId);
+    }
+
+    /**
+     * @param  Builder<Transaction>  $query
+     */
     protected function scopeOfMonth(Builder $query, int $month): void
     {
         $query->whereMonth('date', $month);
