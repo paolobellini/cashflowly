@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\TransactionType;
+use App\Observers\TransactionObserver;
 use Database\Factories\TransactionFactory;
 use DateTimeImmutable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read DateTimeImmutable|null $created_at
  * @property-read DateTimeImmutable|null $updated_at
  */
+#[ObservedBy(TransactionObserver::class)]
 final class Transaction extends Model
 {
     /** @use HasFactory<TransactionFactory> */

@@ -15,15 +15,18 @@ use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 final class CategoryController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $categories = Category::query()
+        $cacheKey = 'categories.index.'.md5($request->getQueryString() ?? '');
+
+        $categories = Cache::tags(['categories'])->remember($cacheKey, now()->addDay(), fn () => Category::query()
             ->when($request->has('type'), fn (Builder $query) => $query->ofType(CategoryType::from($request->string('type')->toString())))
-            ->get();
+            ->get());
 
         return CategoryResource::collection($categories)
             ->response()

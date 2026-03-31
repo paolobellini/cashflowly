@@ -14,19 +14,22 @@ use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 final class TransactionController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $transactions = Transaction::query()
+        $cacheKey = 'transactions.index.'.md5($request->getQueryString() ?? '');
+
+        $transactions = Cache::tags(['transactions'])->flexible($cacheKey, [300, 600], fn () => Transaction::query()
             ->when($request->has('category_id'), fn (Builder $query) => $query->ofCategory($request->string('category_id')->toString()))
             ->when($request->has('month'), fn (Builder $query) => $query->ofMonth((int) $request->integer('month')))
             ->when($request->has('year'), fn (Builder $query) => $query->ofYear((int) $request->integer('year')))
             ->when($request->has('date'), fn (Builder $query) => $query->ofDate($request->string('date')->toString()))
             ->latest('date')
-            ->paginate(25);
+            ->paginate(25));
 
         return TransactionResource::collection($transactions)
             ->response()
