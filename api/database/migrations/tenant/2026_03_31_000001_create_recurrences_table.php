@@ -10,22 +10,24 @@ return new class() extends Migration
 {
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('recurrences', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('wallet_id')->constrained();
             $table->foreignUuid('category_id')->constrained();
             $table->string('type')->index();
             $table->decimal('amount', 15, 2);
-            $table->date('date')->index();
             $table->string('description');
-            $table->text('notes')->nullable();
-            $table->foreignUuid('recurrence_id')->nullable()->constrained('recurrences')->nullOnDelete();
+            $table->string('frequency')->index();
+            $table->date('start_date');
+            $table->date('end_date')->nullable();
+            $table->boolean('is_active')->default(true)->index();
+            $table->date('last_generated_at')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('recurrences');
     }
 };
