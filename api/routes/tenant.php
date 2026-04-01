@@ -35,4 +35,5 @@ Route::middleware([
     Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
     Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
     Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+    Route::delete('/transactions', [TransactionController::class, 'bulkDestroy'])->name('transactions.bulk-destroy');
 });

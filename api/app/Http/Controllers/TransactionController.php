@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\BulkDestroyTransactionAction;
 use App\Actions\DestroyTransactionAction;
 use App\Actions\StoreTransactionAction;
 use App\Actions\UpdateTransactionAction;
+use App\Http\Requests\BulkDestroyTransactionRequest;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use App\Http\Resources\TransactionResource;
@@ -68,6 +70,15 @@ final class TransactionController extends Controller
     public function destroy(Transaction $transaction, DestroyTransactionAction $action): JsonResponse
     {
         $action->handle($transaction);
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function bulkDestroy(BulkDestroyTransactionRequest $request, BulkDestroyTransactionAction $action): JsonResponse
+    {
+        /** @var list<string> $ids */
+        $ids = $request->validated('ids');
+        $action->handle($ids);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
