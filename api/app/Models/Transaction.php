@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\TransactionType;
+use App\Models\Concerns\HasTransactionDetails;
 use App\Observers\TransactionObserver;
 use Database\Factories\TransactionFactory;
 use DateTimeImmutable;
@@ -13,7 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read string $id
@@ -33,25 +33,10 @@ final class Transaction extends Model
     /** @use HasFactory<TransactionFactory> */
     use HasFactory;
 
+    use HasTransactionDetails;
     use HasUuids;
 
     protected $keyType = 'string';
-
-    /**
-     * @return BelongsTo<Wallet, $this>
-     */
-    public function wallet(): BelongsTo
-    {
-        return $this->belongsTo(Wallet::class);
-    }
-
-    /**
-     * @return BelongsTo<Category, $this>
-     */
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
-    }
 
     /**
      * @param  Builder<Transaction>  $query
@@ -91,13 +76,9 @@ final class Transaction extends Model
     public function casts(): array
     {
         return [
+            ...$this->transactionDetailCasts(),
             'id' => 'string',
-            'wallet_id' => 'string',
-            'category_id' => 'string',
-            'type' => TransactionType::class,
-            'amount' => 'decimal:2',
             'date' => 'date',
-            'description' => 'string',
             'notes' => 'string',
             'created_at' => 'timestamp',
             'updated_at' => 'timestamp',
