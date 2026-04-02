@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Enums\TransactionType;
 use App\Models\Category;
+use App\Models\Recurrence;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -39,5 +40,10 @@ final class TransactionFactory extends Factory
     public function expense(): static
     {
         return $this->state(['type' => TransactionType::Expense]);
+    }
+
+    public function recurring(): static
+    {
+        return $this->state(['recurrence_id' => Recurrence::factory()]);
     }
 }

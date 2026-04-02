@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read string $id
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read string $date
  * @property-read string $description
  * @property-read string|null $notes
+ * @property-read string|null $recurrence_id
  * @property-read DateTimeImmutable|null $created_at
  * @property-read DateTimeImmutable|null $updated_at
  */
@@ -37,6 +39,14 @@ final class Transaction extends Model
     use HasUuids;
 
     protected $keyType = 'string';
+
+    /**
+     * @return BelongsTo<Recurrence, $this>
+     */
+    public function recurrence(): BelongsTo
+    {
+        return $this->belongsTo(Recurrence::class);
+    }
 
     /**
      * @param  Builder<Transaction>  $query
@@ -80,6 +90,7 @@ final class Transaction extends Model
             'id' => 'string',
             'date' => 'date',
             'notes' => 'string',
+            'recurrence_id' => 'string',
             'created_at' => 'timestamp',
             'updated_at' => 'timestamp',
         ];

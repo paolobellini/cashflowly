@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Category;
+use App\Models\Recurrence;
 use App\Models\Transaction;
 use App\Models\Wallet;
 
@@ -22,6 +23,7 @@ it('uses the correct keys', function () {
         'date',
         'description',
         'notes',
+        'recurrence_id',
         'created_at',
         'updated_at',
     ]);
@@ -71,4 +73,12 @@ it('can filter by date', function () {
     Transaction::factory()->create(['date' => '2026-03-16']);
 
     expect(Transaction::query()->ofDate('2026-03-15')->count())->toBe(1);
+});
+
+it('belongs to a recurrence', function () {
+    $recurrence = Recurrence::factory()->create();
+    $transaction = Transaction::factory()->for($recurrence)->create();
+
+    expect(Recurrence::query()->count())->toBe(1)
+        ->and($transaction->recurrence_id)->toBe($recurrence->id);
 });
