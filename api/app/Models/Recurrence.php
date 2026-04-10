@@ -68,7 +68,7 @@ final class Recurrence extends Model
 
         return match ($this->frequency) {
             Frequency::Daily => $date->gt($this->last_generated_at),
-            Frequency::Weekly => $date->diffInDays($this->last_generated_at) >= 7,
+            Frequency::Weekly => $this->last_generated_at->diffInDays($date) >= 7,
             Frequency::Monthly => $date->day === $this->start_date->day
                 || ($date->isLastOfMonth() && $this->start_date->day > $date->daysInMonth),
             Frequency::Yearly => $date->month === $this->start_date->month
