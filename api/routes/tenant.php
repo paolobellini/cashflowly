@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\RecurrenceController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Routing\Middleware\SubstituteBindings;
@@ -36,4 +37,6 @@ Route::middleware([
     Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
     Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
     Route::delete('/transactions', [TransactionController::class, 'bulkDestroy'])->name('transactions.bulk-destroy');
+
+    Route::delete('/recurrences/{recurrence}', [RecurrenceController::class, 'destroy'])->name('recurrences.destroy');
 });
