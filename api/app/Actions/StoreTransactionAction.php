@@ -34,8 +34,7 @@ final readonly class StoreTransactionAction
                 'type' => $attributes['type'],
                 'amount' => $attributes['amount'],
                 'date' => $attributes['date'],
-                'description' => $attributes['description'],
-                'notes' => $attributes['notes'] ?? null,
+                'description' => $attributes['description'] ?? null,
                 'recurrence_id' => $recurrence->last_generated_at !== null ? $recurrence->id : null,
             ]);
 

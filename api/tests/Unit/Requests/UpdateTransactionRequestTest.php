@@ -24,4 +24,4 @@ it('fails when required fields are missing', function (string $field) {
 
     expect($validator->fails())->toBeTrue()
         ->and($validator->errors()->has($field))->toBeTrue();
-})->with(['wallet_id', 'category_id', 'type', 'amount', 'date', 'description']);
+})->with(['wallet_id', 'category_id', 'type', 'amount', 'date']);

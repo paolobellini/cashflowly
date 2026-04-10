@@ -16,7 +16,7 @@ return new class() extends Migration
             $table->foreignUuid('category_id')->constrained();
             $table->string('type')->index();
             $table->decimal('amount', 15, 2);
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('frequency')->index();
             $table->date('start_date');
             $table->date('end_date')->nullable();

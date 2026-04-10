@@ -38,5 +38,5 @@ it('fails when required fields are missing', function () {
     $response = $this->putJson($this->tenantUrl("/transactions/{$transaction->id}"), [], $this->tenantHeaders());
 
     $response->assertUnprocessable()
-        ->assertJsonValidationErrors(['wallet_id', 'category_id', 'type', 'amount', 'date', 'description']);
+        ->assertJsonValidationErrors(['wallet_id', 'category_id', 'type', 'amount', 'date']);
 });

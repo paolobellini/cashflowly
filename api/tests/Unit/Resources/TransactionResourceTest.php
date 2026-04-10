@@ -16,7 +16,7 @@ it('returns the correct structure', function () {
     $resource = new TransactionResource($transaction)->toArray(new Request());
 
     expect($resource)
-        ->toHaveKeys(['id', 'wallet_id', 'category_id', 'type', 'amount', 'date', 'description', 'notes', 'recurrence_id'])
+        ->toHaveKeys(['id', 'wallet_id', 'category_id', 'type', 'amount', 'date', 'description', 'recurrence_id'])
         ->not->toHaveKey('created_at')
         ->not->toHaveKey('updated_at');
 });

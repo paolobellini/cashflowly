@@ -26,7 +26,6 @@ final class TransactionResource extends JsonResource
             'amount' => $transaction->amount,
             'date' => $transaction->date,
             'description' => $transaction->description,
-            'notes' => $transaction->notes,
             'recurrence_id' => $transaction->recurrence_id,
         ];
     }

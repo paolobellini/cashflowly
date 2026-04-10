@@ -15,6 +15,7 @@ it('passes when wallet has sufficient balance', function () {
     $category = Category::factory()->create();
 
     $attributes = Transaction::factory()->expense()->for($wallet)->for($category)->make(['amount' => 500])->toArray();
+    $attributes['is_recurrence'] = false;
 
     $response = $this->postJson($this->tenantUrl('/transactions'), $attributes, $this->tenantHeaders());
 
@@ -26,6 +27,7 @@ it('fails when wallet has insufficient balance', function () {
     $category = Category::factory()->create();
 
     $attributes = Transaction::factory()->expense()->for($wallet)->for($category)->make(['amount' => 500])->toArray();
+    $attributes['is_recurrence'] = false;
 
     $response = $this->postJson($this->tenantUrl('/transactions'), $attributes, $this->tenantHeaders());
 
@@ -37,6 +39,7 @@ it('skips balance check for income transactions', function () {
     $category = Category::factory()->create();
 
     $attributes = Transaction::factory()->income()->for($wallet)->for($category)->make(['amount' => 5000])->toArray();
+    $attributes['is_recurrence'] = false;
 
     $response = $this->postJson($this->tenantUrl('/transactions'), $attributes, $this->tenantHeaders());
 

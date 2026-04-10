@@ -37,8 +37,7 @@ final class UpdateTransactionRequest extends FormRequest
             'type' => ['required', 'string', Rule::enum(TransactionType::class)],
             'amount' => ['required', 'numeric', 'gt:0'],
             'date' => ['required', 'date'],
-            'description' => ['required', 'string', 'min:2', 'max:255'],
-            'notes' => ['nullable', 'string', 'max:1000'],
+            'description' => ['nullable', 'string', 'min:2', 'max:255'],
         ];
     }
 }

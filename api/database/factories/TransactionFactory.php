@@ -27,8 +27,7 @@ final class TransactionFactory extends Factory
             'type' => fake()->randomElement(TransactionType::cases()),
             'amount' => fake()->randomFloat(2, 1, 5000),
             'date' => fake()->date(),
-            'description' => fake()->sentence(),
-            'notes' => fake()->optional()->sentence(),
+            'description' => fake()->optional()->sentence(),
         ];
     }
 

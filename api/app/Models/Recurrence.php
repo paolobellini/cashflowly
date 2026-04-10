@@ -24,7 +24,7 @@ use Illuminate\Support\Carbon;
  * @property-read string $category_id
  * @property-read TransactionType $type
  * @property-read string $amount
- * @property-read string $description
+ * @property-read string|null $description
  * @property-read Frequency $frequency
  * @property-read Carbon $start_date
  * @property-read Carbon|null $end_date

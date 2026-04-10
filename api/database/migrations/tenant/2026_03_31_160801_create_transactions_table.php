@@ -17,8 +17,7 @@ return new class() extends Migration
             $table->string('type')->index();
             $table->decimal('amount', 15, 2);
             $table->date('date')->index();
-            $table->string('description');
-            $table->text('notes')->nullable();
+            $table->string('description')->nullable();
             $table->foreignUuid('recurrence_id')->nullable()->constrained('recurrences')->nullOnDelete();
             $table->timestamps();
         });

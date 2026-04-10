@@ -26,7 +26,7 @@ final class RecurrenceFactory extends Factory
             'category_id' => Category::factory(),
             'type' => fake()->randomElement(TransactionType::cases()),
             'amount' => fake()->randomFloat(2, 1, 5000),
-            'description' => fake()->sentence(),
+            'description' => fake()->optional()->sentence(),
             'frequency' => fake()->randomElement(Frequency::cases()),
             'start_date' => fake()->date(),
             'end_date' => null,

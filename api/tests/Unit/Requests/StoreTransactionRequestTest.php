@@ -20,7 +20,6 @@ function validTransactionData(array $overrides = []): array
         'amount' => 100.50,
         'date' => '2026-03-31',
         'description' => 'Grocery shopping',
-        'notes' => 'Weekly groceries',
         'is_recurrence' => false,
     ], $overrides);
 }
@@ -40,7 +39,7 @@ it('fails when required fields are missing', function (string $field) {
 
     expect($validator->fails())->toBeTrue()
         ->and($validator->errors()->has($field))->toBeTrue();
-})->with(['wallet_id', 'category_id', 'type', 'amount', 'date', 'description', 'is_recurrence']);
+})->with(['wallet_id', 'category_id', 'type', 'amount', 'date', 'is_recurrence']);
 
 it('fails when recurrence fields are missing while is_recurrence is true', function (string $field) {
     $data = validTransactionData([

@@ -23,8 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read TransactionType $type
  * @property-read string $amount
  * @property-read string $date
- * @property-read string $description
- * @property-read string|null $notes
+ * @property-read string|null $description
  * @property-read string|null $recurrence_id
  * @property-read DateTimeImmutable|null $created_at
  * @property-read DateTimeImmutable|null $updated_at
@@ -89,7 +88,6 @@ final class Transaction extends Model
             ...$this->transactionDetailCasts(),
             'id' => 'string',
             'date' => 'date',
-            'notes' => 'string',
             'recurrence_id' => 'string',
             'created_at' => 'timestamp',
             'updated_at' => 'timestamp',
