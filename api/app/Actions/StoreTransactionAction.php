@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\Models\Recurrence;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,19 +24,20 @@ final readonly class StoreTransactionAction
     public function handle(array $attributes): Transaction
     {
         return DB::transaction(function () use ($attributes) {
-            $transactionData = collect($attributes)
-                ->except(['is_recurrence', 'frequency', 'start_date', 'end_date'])
-                ->all();
+            $recurrence = $attributes['is_recurrence']
+                ? $this->storeRecurrenceAction->handle($attributes)
+                : new Recurrence();
 
-            if ($attributes['is_recurrence']) {
-                $recurrence = $this->storeRecurrenceAction->handle($attributes);
-
-                if ($recurrence->last_generated_at !== null) {
-                    $transactionData['recurrence_id'] = $recurrence->id;
-                }
-            }
-
-            $transaction = Transaction::query()->create($transactionData);
+            $transaction = Transaction::query()->create([
+                'wallet_id' => $attributes['wallet_id'],
+                'category_id' => $attributes['category_id'],
+                'type' => $attributes['type'],
+                'amount' => $attributes['amount'],
+                'date' => $attributes['date'],
+                'description' => $attributes['description'],
+                'notes' => $attributes['notes'] ?? null,
+                'recurrence_id' => $recurrence->last_generated_at !== null ? $recurrence->id : null,
+            ]);
 
             Log::info('Transaction created', ['transaction_id' => $transaction->id]);
 
