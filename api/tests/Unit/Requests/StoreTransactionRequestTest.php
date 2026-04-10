@@ -21,6 +21,7 @@ function validTransactionData(array $overrides = []): array
         'date' => '2026-03-31',
         'description' => 'Grocery shopping',
         'notes' => 'Weekly groceries',
+        'is_recurrence' => false,
     ], $overrides);
 }
 
@@ -39,4 +40,43 @@ it('fails when required fields are missing', function (string $field) {
 
     expect($validator->fails())->toBeTrue()
         ->and($validator->errors()->has($field))->toBeTrue();
-})->with(['wallet_id', 'category_id', 'type', 'amount', 'date', 'description']);
+})->with(['wallet_id', 'category_id', 'type', 'amount', 'date', 'description', 'is_recurrence']);
+
+it('fails when recurrence fields are missing while is_recurrence is true', function (string $field) {
+    $data = validTransactionData([
+        'is_recurrence' => true,
+        'frequency' => 'monthly',
+        'start_date' => today()->toDateString(),
+        $field => null,
+    ]);
+
+    $request = new StoreTransactionRequest();
+    $request->merge($data);
+
+    $validator = Validator::make($data, $request->rules());
+
+    expect($validator->fails())->toBeTrue()
+        ->and($validator->errors()->has($field))->toBeTrue();
+})->with(['frequency', 'start_date']);
+
+it('passes without recurrence fields when is_recurrence is false', function () {
+    $validator = Validator::make(validTransactionData(), (new StoreTransactionRequest())->rules());
+
+    expect($validator->passes())->toBeTrue();
+});
+
+it('passes with valid recurrence data', function () {
+    $data = validTransactionData([
+        'is_recurrence' => true,
+        'frequency' => 'monthly',
+        'start_date' => today()->toDateString(),
+        'end_date' => today()->addYear()->toDateString(),
+    ]);
+
+    $request = new StoreTransactionRequest();
+    $request->merge($data);
+
+    $validator = Validator::make($data, $request->rules());
+
+    expect($validator->passes())->toBeTrue();
+});

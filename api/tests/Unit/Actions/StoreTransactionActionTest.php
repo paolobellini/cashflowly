@@ -11,6 +11,7 @@ beforeEach(function () {
 
 it('creates a transaction', function () {
     $attributes = Transaction::factory()->make()->toArray();
+    $attributes['is_recurrence'] = false;
 
     $transaction = resolve(StoreTransactionAction::class)->handle($attributes);
 

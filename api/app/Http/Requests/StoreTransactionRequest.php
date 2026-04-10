@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Enums\Frequency;
 use App\Enums\TransactionType;
 use App\Rules\HasSufficientBalance;
 use Illuminate\Foundation\Http\FormRequest;
@@ -39,6 +40,10 @@ final class StoreTransactionRequest extends FormRequest
             'date' => ['required', 'date'],
             'description' => ['required', 'string', 'min:2', 'max:255'],
             'notes' => ['nullable', 'string', 'max:1000'],
+            'is_recurrence' => ['required', 'boolean'],
+            'frequency' => ['nullable', Rule::when($this->boolean('is_recurrence'), ['required', Rule::enum(Frequency::class)])],
+            'start_date' => ['nullable', Rule::when($this->boolean('is_recurrence'), ['required', 'date', 'after_or_equal:today'])],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
         ];
     }
 }
