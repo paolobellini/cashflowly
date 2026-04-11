@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { TransactionWithDetails } from '@/types'
 import { cn } from '@/lib/utils'
 import { Plus, Wallet as WalletIcon, Tag, Calendar as CalendarIcon, Type, Repeat } from 'lucide-vue-next'
@@ -25,6 +26,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar'
 import { Switch } from '@/components/ui/switch'
 import { getLocalTimeZone, today } from '@internationalized/date'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   isOpen: boolean
@@ -76,7 +79,7 @@ function formatCalDate(d: any) {
       <div class="bg-primary p-6 text-primary-foreground">
         <DialogHeader>
           <DialogTitle class="text-xl font-semibold">
-            {{ initialData ? 'Edit Transaction' : 'New Transaction' }}
+            {{ initialData ? t('transactions.form.editTransaction') : t('transactions.form.newTransaction') }}
           </DialogTitle>
         </DialogHeader>
 
@@ -92,7 +95,7 @@ function formatCalDate(d: any) {
             "
             @click="type = 'expense'"
           >
-            Expense
+            {{ t('transactions.form.expense') }}
           </button>
           <button
             :class="
@@ -105,7 +108,7 @@ function formatCalDate(d: any) {
             "
             @click="type = 'income'"
           >
-            Income
+            {{ t('transactions.form.income') }}
           </button>
         </div>
       </div>
@@ -113,12 +116,12 @@ function formatCalDate(d: any) {
       <div class="p-6 space-y-5 bg-card max-h-[80vh] overflow-y-auto">
         <!-- Amount -->
         <div class="space-y-1.5">
-          <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">Amount</Label>
+          <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">{{ t('transactions.form.amount') }}</Label>
           <div class="relative">
             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-xl font-semibold text-muted-foreground">$</span>
             <Input
               type="number"
-              placeholder="0.00"
+              :placeholder="t('transactions.form.amountPlaceholder')"
               class="pl-8 h-12 text-2xl font-semibold bg-muted/20 border-border/50 focus-visible:ring-primary/20"
             />
           </div>
@@ -128,11 +131,11 @@ function formatCalDate(d: any) {
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-1.5">
             <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 flex items-center gap-1.5">
-              <WalletIcon class="size-3" /> Wallet
+              <WalletIcon class="size-3" /> {{ t('transactions.form.wallet') }}
             </Label>
             <Select :default-value="MOCK_WALLETS[0]?.id">
               <SelectTrigger class="h-10 bg-muted/20 border-border/50 focus:ring-primary/20">
-                <SelectValue placeholder="Select wallet" />
+                <SelectValue :placeholder="t('transactions.form.selectWallet')" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem v-for="w in MOCK_WALLETS" :key="w.id" :value="w.id">
@@ -147,12 +150,12 @@ function formatCalDate(d: any) {
 
           <div class="space-y-1.5">
             <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 flex items-center gap-1.5">
-              <Tag class="size-3" /> Category
+              <Tag class="size-3" /> {{ t('transactions.form.category') }}
             </Label>
             <div v-if="!isAddingCategory" class="flex gap-2">
               <Select :default-value="MOCK_CATEGORIES[0]?.id">
                 <SelectTrigger class="h-10 bg-muted/20 border-border/50 focus:ring-primary/20 flex-1">
-                  <SelectValue placeholder="Select category" />
+                  <SelectValue :placeholder="t('transactions.form.selectCategory')" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem
@@ -176,7 +179,7 @@ function formatCalDate(d: any) {
             <div v-else class="flex gap-2">
               <Input
                 v-model="newCategoryName"
-                placeholder="Category name"
+                :placeholder="t('transactions.form.categoryName')"
                 class="h-10 bg-muted/20 border-primary/30 focus-visible:ring-primary/20 flex-1"
                 autofocus
               />
@@ -196,7 +199,7 @@ function formatCalDate(d: any) {
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-1.5">
             <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 flex items-center gap-1.5">
-              <CalendarIcon class="size-3" /> Date
+              <CalendarIcon class="size-3" /> {{ t('transactions.form.date') }}
             </Label>
             <Popover>
               <PopoverTrigger as-child>
@@ -210,7 +213,7 @@ function formatCalDate(d: any) {
                   "
                 >
                   <CalendarIcon class="mr-2 size-3.5" />
-                  {{ date ? formatCalDate(date) : 'Pick a date' }}
+                  {{ date ? formatCalDate(date) : t('transactions.form.pickDate') }}
                 </Button>
               </PopoverTrigger>
               <PopoverContent class="w-auto p-0 border-none shadow-xl" align="start">
@@ -221,10 +224,10 @@ function formatCalDate(d: any) {
 
           <div class="space-y-1.5">
             <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 flex items-center gap-1.5">
-              <Type class="size-3" /> Description
+              <Type class="size-3" /> {{ t('transactions.form.description') }}
             </Label>
             <Input
-              placeholder="Notes..."
+              :placeholder="t('transactions.form.notesPlaceholder')"
               class="h-10 bg-muted/20 border-border/50 focus-visible:ring-primary/20"
             />
           </div>
@@ -245,8 +248,8 @@ function formatCalDate(d: any) {
                 <Repeat class="size-4" />
               </div>
               <div class="flex flex-col">
-                <span class="text-xs font-bold">Repeat this transaction</span>
-                <span class="text-[10px] text-muted-foreground font-medium">Create a recurring schedule</span>
+                <span class="text-xs font-bold">{{ t('transactions.form.repeat') }}</span>
+                <span class="text-[10px] text-muted-foreground font-medium">{{ t('transactions.form.repeatHint') }}</span>
               </div>
             </div>
             <Switch v-model:checked="isRecurrence" />
@@ -255,22 +258,22 @@ function formatCalDate(d: any) {
           <div v-if="isRecurrence" class="overflow-hidden space-y-4 mt-3">
             <div class="grid grid-cols-2 gap-4">
               <div class="space-y-1.5">
-                <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">Frequency</Label>
+                <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">{{ t('transactions.form.frequency') }}</Label>
                 <Select v-model="frequency">
                   <SelectTrigger class="h-10 bg-muted/20 border-border/50 focus:ring-primary/20">
-                    <SelectValue placeholder="Select frequency" />
+                    <SelectValue :placeholder="t('transactions.form.selectFrequency')" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="daily">Daily</SelectItem>
-                    <SelectItem value="weekly">Weekly</SelectItem>
-                    <SelectItem value="monthly">Monthly</SelectItem>
-                    <SelectItem value="yearly">Yearly</SelectItem>
+                    <SelectItem value="daily">{{ t('transactions.form.daily') }}</SelectItem>
+                    <SelectItem value="weekly">{{ t('transactions.form.weekly') }}</SelectItem>
+                    <SelectItem value="monthly">{{ t('transactions.form.monthly') }}</SelectItem>
+                    <SelectItem value="yearly">{{ t('transactions.form.yearly') }}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div class="space-y-1.5">
-                <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">End Date (Optional)</Label>
+                <Label class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">{{ t('transactions.form.endDate') }}</Label>
                 <Popover>
                   <PopoverTrigger as-child>
                     <Button
@@ -283,7 +286,7 @@ function formatCalDate(d: any) {
                       "
                     >
                       <CalendarIcon class="mr-2 size-3.5" />
-                      {{ endDate ? formatCalDate(endDate) : 'No end date' }}
+                      {{ endDate ? formatCalDate(endDate) : t('transactions.form.noEndDate') }}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent class="w-auto p-0 border-none shadow-xl" align="start">
@@ -296,9 +299,9 @@ function formatCalDate(d: any) {
         </div>
 
         <DialogFooter class="pt-2">
-          <Button variant="ghost" class="h-10 px-6" @click="handleClose">Cancel</Button>
+          <Button variant="ghost" class="h-10 px-6" @click="handleClose">{{ t('transactions.form.cancel') }}</Button>
           <Button class="h-10 px-8 font-semibold">
-            {{ initialData ? 'Update' : 'Save Transaction' }}
+            {{ initialData ? t('transactions.form.update') : t('transactions.form.save') }}
           </Button>
         </DialogFooter>
       </div>

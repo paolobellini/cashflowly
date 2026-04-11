@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import type { TransactionWithDetails } from '@/types'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { cn } from '@/lib/utils'
 import { isToday, isYesterday, format } from 'date-fns'
+
+const { t } = useI18n()
 import { Badge } from '@/components/ui/badge'
 import EmptyState from '@/components/shared/EmptyState.vue'
 import TransactionItem from './TransactionItem.vue'
@@ -41,8 +44,8 @@ const groupedByCategory = computed(() => {
 
 function formatDateHeader(dateStr: string) {
   const date = new Date(dateStr)
-  if (isToday(date)) return 'Today'
-  if (isYesterday(date)) return 'Yesterday'
+  if (isToday(date)) return t('transactions.list.today')
+  if (isYesterday(date)) return t('transactions.list.yesterday')
   return format(date, 'MMM d, yyyy')
 }
 </script>
@@ -117,8 +120,8 @@ function formatDateHeader(dateStr: string) {
     <EmptyState
       v-if="transactions.length === 0"
       emoji="&#x1F4B8;"
-      title="No transactions found"
-      description="Start by adding your first transaction or adjust your filters."
+      :title="t('transactions.list.noTransactions')"
+      :description="t('transactions.list.noTransactionsHint')"
     />
   </div>
 </template>

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { TransactionWithDetails } from '@/types'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { cn } from '@/lib/utils'
+
+const { t } = useI18n()
 import { Repeat, Calendar, Clock, MoreVertical, Edit2, Trash2, Pause } from 'lucide-vue-next'
 import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
@@ -34,8 +37,8 @@ function formatAmount(amount: number, currency: string) {
   <EmptyState
     v-if="recurringTransactions.length === 0"
     :icon="Repeat"
-    title="No recurring schedules"
-    description="Set up automated transactions to save time and track regular payments."
+    :title="t('transactions.recurrence.noSchedules')"
+    :description="t('transactions.recurrence.noSchedulesHint')"
     dashed
   />
 
@@ -71,14 +74,14 @@ function formatAmount(amount: number, currency: string) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" class="w-40">
             <DropdownMenuItem class="gap-2" @click="emit('edit', transaction)">
-              <Edit2 class="size-3.5" /> Edit Schedule
+              <Edit2 class="size-3.5" /> {{ t('transactions.recurrence.editSchedule') }}
             </DropdownMenuItem>
             <DropdownMenuItem class="gap-2">
-              <Pause class="size-3.5" /> Pause
+              <Pause class="size-3.5" /> {{ t('transactions.recurrence.pause') }}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem class="gap-2 text-destructive focus:text-destructive">
-              <Trash2 class="size-3.5" /> Delete
+              <Trash2 class="size-3.5" /> {{ t('transactions.recurrence.delete') }}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -87,15 +90,15 @@ function formatAmount(amount: number, currency: string) {
       <div class="space-y-4">
         <div class="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
           <div class="flex flex-col">
-            <span class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">Amount</span>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{{ t('transactions.recurrence.amount') }}</span>
             <span :class="cn('text-lg font-black', transaction.type === 'income' ? 'text-emerald-600' : 'text-foreground')">
               {{ transaction.type === 'income' ? '+' : '-' }}{{ formatAmount(transaction.amount, transaction.wallet.currency) }}
             </span>
           </div>
           <div class="text-right">
-            <span class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">Frequency</span>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{{ t('transactions.recurrence.frequency') }}</span>
             <Badge class="block mt-1 bg-primary/10 text-primary border-none font-bold text-[10px] uppercase tracking-wider">
-              {{ transaction.recurrence?.frequency ?? 'Monthly' }}
+              {{ transaction.recurrence?.frequency ?? t('transactions.form.monthly') }}
             </Badge>
           </div>
         </div>
@@ -103,11 +106,11 @@ function formatAmount(amount: number, currency: string) {
         <div class="grid grid-cols-2 gap-3">
           <div class="flex items-center gap-2 text-xs text-muted-foreground">
             <Calendar class="size-3.5" />
-            <span>Next: {{ format(new Date(), 'MMM d') }}</span>
+            <span>{{ t('transactions.recurrence.next') }} {{ format(new Date(), 'MMM d') }}</span>
           </div>
           <div class="flex items-center gap-2 text-xs text-muted-foreground justify-end">
             <Clock class="size-3.5" />
-            <span>Active</span>
+            <span>{{ t('transactions.recurrence.active') }}</span>
           </div>
         </div>
 
@@ -123,7 +126,7 @@ function formatAmount(amount: number, currency: string) {
             size="sm"
             class="h-7 text-[10px] font-bold uppercase tracking-widest hover:bg-primary/5 hover:text-primary"
           >
-            View History
+            {{ t('transactions.recurrence.viewHistory') }}
           </Button>
         </div>
       </div>

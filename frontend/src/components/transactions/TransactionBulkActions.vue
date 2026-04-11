@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { Download, Trash2, X } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
+
+const { t } = useI18n()
 
 defineProps<{
   count: number
@@ -29,7 +32,7 @@ const emit = defineEmits<{
             <span class="size-8 rounded-lg bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground shadow-lg shadow-primary/30">
               {{ count }}
             </span>
-            <span class="text-sm font-bold">Selected</span>
+            <span class="text-sm font-bold">{{ t('transactions.bulk.selected') }}</span>
           </div>
 
           <div class="h-8 w-px bg-background/20" />
@@ -41,7 +44,7 @@ const emit = defineEmits<{
               class="hover:bg-background/10 text-background gap-2 h-10 text-xs font-bold rounded-xl"
               @click="emit('export')"
             >
-              <Download class="size-4" /> Export
+              <Download class="size-4" /> {{ t('transactions.bulk.export') }}
             </Button>
             <Button
               variant="ghost"
@@ -49,7 +52,7 @@ const emit = defineEmits<{
               class="hover:bg-rose-500/20 text-rose-400 gap-2 h-10 text-xs font-bold rounded-xl"
               @click="emit('delete')"
             >
-              <Trash2 class="size-4" /> Delete
+              <Trash2 class="size-4" /> {{ t('transactions.bulk.delete') }}
             </Button>
           </div>
 

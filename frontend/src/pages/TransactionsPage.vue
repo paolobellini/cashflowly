@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { TransactionWithDetails } from '@/types'
 import { cn } from '@/lib/utils'
 import { MOCK_TRANSACTIONS } from '@/constants/mockData'
@@ -14,6 +15,8 @@ import TransactionPagination from '@/components/transactions/TransactionPaginati
 import TransactionBulkActions from '@/components/transactions/TransactionBulkActions.vue'
 import TransactionForm from '@/components/transactions/TransactionForm.vue'
 import RecurrenceList from '@/components/transactions/RecurrenceList.vue'
+
+const { t } = useI18n()
 
 const transactions = ref<TransactionWithDetails[]>(MOCK_TRANSACTIONS)
 const selectedIds = ref<string[]>([])
@@ -69,8 +72,8 @@ function handleCloseForm() {
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div class="space-y-4">
         <PageHeader
-          title="Transactions"
-          description="Manage and track your financial activities across all wallets."
+          :title="t('transactions.title')"
+          :description="t('transactions.description')"
         />
 
         <div class="flex items-center gap-1 p-1 bg-muted/30 rounded-xl w-fit">
@@ -85,7 +88,7 @@ function handleCloseForm() {
             "
             @click="activeTab = 'transactions'"
           >
-            All Transactions
+            {{ t('transactions.allTransactions') }}
           </button>
           <button
             :class="
@@ -98,7 +101,7 @@ function handleCloseForm() {
             "
             @click="activeTab = 'recurrences'"
           >
-            Recurring Schedules
+            {{ t('transactions.recurringSchedules') }}
             <Badge
               variant="secondary"
               class="h-4 px-1 text-[8px] font-black bg-primary/10 text-primary border-none"
@@ -115,14 +118,14 @@ function handleCloseForm() {
           size="sm"
           class="h-10 gap-2 border-border/50 px-4 rounded-xl hover:bg-muted/50 transition-all"
         >
-          <Download class="size-4" /> Export
+          <Download class="size-4" /> {{ t('transactions.export') }}
         </Button>
         <Button
           size="sm"
           class="h-10 gap-2 font-semibold px-6 shadow-lg shadow-primary/20 rounded-xl"
           @click="handleNewTransaction"
         >
-          <Plus class="size-4" /> New Transaction
+          <Plus class="size-4" /> {{ t('transactions.newTransaction') }}
         </Button>
       </div>
     </div>

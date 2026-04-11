@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { TransactionWithDetails } from '@/types'
+import { useI18n } from 'vue-i18n'
 import { cn } from '@/lib/utils'
 import { MoreVertical, Edit2, Trash2 } from 'lucide-vue-next'
+
+const { t } = useI18n()
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -77,10 +80,10 @@ function formatAmount(amount: number, currency: string) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-40">
           <DropdownMenuItem class="gap-2" @click="emit('edit', transaction)">
-            <Edit2 class="size-3.5" /> Edit
+            <Edit2 class="size-3.5" /> {{ t('transactions.item.edit') }}
           </DropdownMenuItem>
           <DropdownMenuItem class="gap-2 text-destructive focus:text-destructive" @click="emit('delete', transaction)">
-            <Trash2 class="size-3.5" /> Delete
+            <Trash2 class="size-3.5" /> {{ t('transactions.item.delete') }}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -181,10 +184,10 @@ function formatAmount(amount: number, currency: string) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-40">
           <DropdownMenuItem class="gap-2" @click="emit('edit', transaction)">
-            <Edit2 class="size-3.5" /> Edit
+            <Edit2 class="size-3.5" /> {{ t('transactions.item.edit') }}
           </DropdownMenuItem>
           <DropdownMenuItem class="gap-2 text-destructive focus:text-destructive" @click="emit('delete', transaction)">
-            <Trash2 class="size-3.5" /> Delete
+            <Trash2 class="size-3.5" /> {{ t('transactions.item.delete') }}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

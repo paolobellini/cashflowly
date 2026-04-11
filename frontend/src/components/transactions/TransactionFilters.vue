@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { cn } from '@/lib/utils'
 import {
   Search,
@@ -20,13 +21,19 @@ import {
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu'
 
+const { t } = useI18n()
+
 const searchQuery = defineModel<string>('searchQuery', { default: '' })
 const activeFilter = defineModel<'all' | 'income' | 'expense'>('activeFilter', { default: 'all' })
 const viewMode = defineModel<'comfortable' | 'ultra-compact' | 'board'>('viewMode', {
   default: 'comfortable',
 })
 
-const filterOptions = ['all', 'income', 'expense'] as const
+const filterOptions = [
+  { value: 'all' as const, labelKey: 'transactions.filters.all' },
+  { value: 'income' as const, labelKey: 'transactions.filters.income' },
+  { value: 'expense' as const, labelKey: 'transactions.filters.expense' },
+]
 </script>
 
 <template>
@@ -37,7 +44,7 @@ const filterOptions = ['all', 'income', 'expense'] as const
         <Search class="absolute left-3 size-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
         <Input
           :model-value="searchQuery"
-          placeholder="Search transactions..."
+          :placeholder="t('transactions.filters.search')"
           class="pl-9 h-9 bg-transparent border-none rounded-lg text-sm focus-visible:ring-0 shadow-none"
           @update:model-value="searchQuery = String($event)"
         />
@@ -48,18 +55,18 @@ const filterOptions = ['all', 'income', 'expense'] as const
     <div class="bg-card border border-border/50 rounded-xl p-1 shadow-sm flex items-center gap-1">
       <button
         v-for="f in filterOptions"
-        :key="f"
+        :key="f.value"
         :class="
           cn(
-            'px-4 h-9 rounded-lg text-xs font-bold capitalize transition-all relative',
-            activeFilter === f
+            'px-4 h-9 rounded-lg text-xs font-bold transition-all relative',
+            activeFilter === f.value
               ? 'text-primary bg-primary/10'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
           )
         "
-        @click="activeFilter = f"
+        @click="activeFilter = f.value"
       >
-        {{ f }}
+        {{ t(f.labelKey) }}
       </button>
     </div>
 
@@ -73,12 +80,12 @@ const filterOptions = ['all', 'income', 'expense'] as const
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-56 rounded-xl">
-          <DropdownMenuLabel>Time Period</DropdownMenuLabel>
+          <DropdownMenuLabel>{{ t('transactions.filters.timePeriod') }}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Last 7 Days</DropdownMenuItem>
-          <DropdownMenuItem>Last 30 Days</DropdownMenuItem>
-          <DropdownMenuItem>This Month</DropdownMenuItem>
-          <DropdownMenuItem>Custom Range...</DropdownMenuItem>
+          <DropdownMenuItem>{{ t('transactions.filters.last7Days') }}</DropdownMenuItem>
+          <DropdownMenuItem>{{ t('transactions.filters.last30Days') }}</DropdownMenuItem>
+          <DropdownMenuItem>{{ t('transactions.filters.thisMonth') }}</DropdownMenuItem>
+          <DropdownMenuItem>{{ t('transactions.filters.customRange') }}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -92,17 +99,17 @@ const filterOptions = ['all', 'income', 'expense'] as const
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-64 p-2 rounded-xl">
           <DropdownMenuLabel class="text-xs font-bold uppercase tracking-widest text-muted-foreground/60 px-2 py-1.5">
-            Wallets
+            {{ t('transactions.filters.wallets') }}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuCheckboxItem :checked="true">Main Wallet</DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem :checked="true">Savings</DropdownMenuCheckboxItem>
           <DropdownMenuSeparator />
           <DropdownMenuLabel class="text-xs font-bold uppercase tracking-widest text-muted-foreground/60 px-2 py-1.5">
-            Sort
+            {{ t('transactions.filters.sort') }}
           </DropdownMenuLabel>
-          <DropdownMenuItem class="rounded-lg">Newest First</DropdownMenuItem>
-          <DropdownMenuItem class="rounded-lg">Highest Amount</DropdownMenuItem>
+          <DropdownMenuItem class="rounded-lg">{{ t('transactions.filters.newestFirst') }}</DropdownMenuItem>
+          <DropdownMenuItem class="rounded-lg">{{ t('transactions.filters.highestAmount') }}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
