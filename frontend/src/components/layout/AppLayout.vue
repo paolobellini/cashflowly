@@ -8,8 +8,10 @@ import AppHeader from './AppHeader.vue'
   <SidebarProvider>
     <AppSidebar />
     <SidebarInset>
-      <AppHeader />
-      <main class="flex-1 overflow-y-auto p-6">
+      <AppHeader
+        class="fixed top-0 right-0 left-[var(--sidebar-width)] z-20 transition-[left] duration-200 ease-linear group-data-[collapsible=icon]/sidebar-wrapper:left-[var(--sidebar-width-icon)]"
+      />
+      <main class="flex-1 overflow-y-auto">
         <RouterView />
       </main>
     </SidebarInset>
