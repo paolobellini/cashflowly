@@ -40,17 +40,19 @@ function formatAmount(amount: number, currency: string) {
     v-if="viewMode === 'board'"
     :class="
       cn(
-        'group relative flex flex-col gap-3 p-4 rounded-xl transition-all duration-300',
+        'group relative flex flex-col gap-3 p-4 rounded-xl transition-all duration-300 cursor-pointer',
         'bg-card border border-border/50 hover:border-primary/30 shadow-sm hover:shadow-md',
         isSelected && 'border-primary bg-primary/5 shadow-md',
       )
     "
+    @click="emit('select', transaction.id)"
   >
     <div class="flex items-start justify-between">
       <CategoryIcon :icon="transaction.category.icon" :color="transaction.category.color" size="sm" />
       <Checkbox
         :model-value="isSelected"
         class="rounded border-muted-foreground/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+        @click.stop
         @update:model-value="emit('select', transaction.id)"
       />
     </div>
@@ -72,7 +74,7 @@ function formatAmount(amount: number, currency: string) {
         {{ isIncome ? '+' : '-' }}{{ formatAmount(transaction.amount, transaction.wallet.currency) }}
       </div>
 
-      <DropdownMenu>
+      <DropdownMenu @click.stop>
         <DropdownMenuTrigger as-child>
           <Button variant="ghost" size="icon" class="h-7 w-7 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
             <MoreVertical class="size-3" />
@@ -95,17 +97,19 @@ function formatAmount(amount: number, currency: string) {
     v-else
     :class="
       cn(
-        'group relative flex items-center transition-all duration-300',
+        'group relative flex items-center transition-all duration-300 cursor-pointer',
         viewMode === 'ultra-compact' ? 'px-4 py-2.5 gap-4 rounded-lg' : 'p-4 gap-4 rounded-xl',
         'bg-card border border-border/50 hover:border-primary/30 shadow-sm hover:shadow-md',
         isSelected && 'border-primary bg-primary/5 shadow-md',
       )
     "
+    @click="emit('select', transaction.id)"
   >
     <div class="flex items-center gap-3 shrink-0">
       <Checkbox
         :model-value="isSelected"
         class="rounded border-muted-foreground/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+        @click.stop
         @update:model-value="emit('select', transaction.id)"
       />
       <CategoryIcon
@@ -172,7 +176,7 @@ function formatAmount(amount: number, currency: string) {
         )
       "
     >
-      <DropdownMenu>
+      <DropdownMenu @click.stop>
         <DropdownMenuTrigger as-child>
           <Button
             variant="ghost"

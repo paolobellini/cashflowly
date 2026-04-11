@@ -27,7 +27,7 @@ const emit = defineEmits<{
       leave-to-class="translate-y-full opacity-0"
     >
       <div v-if="count > 0" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-        <div class="bg-foreground text-background px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-8 min-w-[380px] border border-background/10">
+        <div class="bg-card text-foreground px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-8 min-w-[380px] border border-border">
           <div class="flex items-center gap-3">
             <span class="size-8 rounded-lg bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground shadow-lg shadow-primary/30">
               {{ count }}
@@ -35,13 +35,13 @@ const emit = defineEmits<{
             <span class="text-sm font-bold">{{ t('transactions.bulk.selected') }}</span>
           </div>
 
-          <div class="h-8 w-px bg-background/20" />
+          <div class="h-8 w-px bg-border" />
 
           <div class="flex items-center gap-2 flex-1 justify-center">
             <Button
               variant="ghost"
               size="sm"
-              class="hover:bg-background/10 text-background gap-2 h-10 text-xs font-bold rounded-xl"
+              class="hover:bg-muted gap-2 h-10 text-xs font-bold rounded-xl"
               @click="emit('export')"
             >
               <Download class="size-4" /> {{ t('transactions.bulk.export') }}
@@ -49,7 +49,7 @@ const emit = defineEmits<{
             <Button
               variant="ghost"
               size="sm"
-              class="hover:bg-rose-500/20 text-rose-400 gap-2 h-10 text-xs font-bold rounded-xl"
+              class="hover:bg-rose-500/10 text-rose-500 gap-2 h-10 text-xs font-bold rounded-xl"
               @click="emit('delete')"
             >
               <Trash2 class="size-4" /> {{ t('transactions.bulk.delete') }}
@@ -59,7 +59,7 @@ const emit = defineEmits<{
           <Button
             variant="ghost"
             size="icon"
-            class="hover:bg-background/10 text-background rounded-full h-8 w-8"
+            class="hover:bg-muted text-muted-foreground rounded-full h-8 w-8"
             @click="emit('clear')"
           >
             <X class="size-4" />
