@@ -11,8 +11,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  SidebarSeparator,
 } from '@/components/ui/sidebar'
 import { LayoutDashboard, ArrowLeftRight, User, Settings, LogOut } from 'lucide-vue-next'
+import WalletSelector from '@/components/wallets/WalletSelector.vue'
 
 const route = useRoute()
 
@@ -26,34 +28,51 @@ const navItems = [
 
 <template>
   <Sidebar collapsible="icon">
-    <SidebarHeader>
+    <SidebarHeader
+      class="group-data-[collapsible=icon]:pt-3 group-data-[collapsible=icon]:pb-3 group-data-[collapsible=icon]:items-center"
+    >
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" as-child>
             <router-link to="/">
               <div
-                class="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+                class="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0"
               >
                 <span class="text-sm font-bold">C</span>
               </div>
-              <div class="flex flex-col gap-0.5 leading-none">
-                <span class="font-semibold">Cashflowly</span>
-              </div>
+              <span class="font-semibold truncate">Cashflowly</span>
             </router-link>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarHeader>
 
+    <SidebarSeparator />
+
+    <div class="py-2">
+      <WalletSelector />
+    </div>
+
+    <SidebarSeparator />
+
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupContent>
-          <SidebarMenu>
+          <SidebarMenu class="gap-1.5">
             <SidebarMenuItem v-for="item in navItems" :key="item.to">
-              <SidebarMenuButton as-child :is-active="route.path === item.to" :tooltip="item.label">
-                <router-link :to="item.to">
+              <SidebarMenuButton
+                as-child
+                :is-active="route.path === item.to"
+                :tooltip="item.label"
+                :class="
+                  route.path === item.to
+                    ? 'bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary [&>svg]:text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
+                "
+              >
+                <router-link :to="item.to" class="transition-all duration-200">
                   <component :is="item.icon" />
-                  <span>{{ item.label }}</span>
+                  <span class="text-xs font-medium">{{ item.label }}</span>
                 </router-link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -65,7 +84,10 @@ const navItems = [
     <SidebarFooter>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton tooltip="Logout">
+          <SidebarMenuButton
+            tooltip="Logout"
+            class="text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all duration-200"
+          >
             <LogOut />
             <span>Logout</span>
           </SidebarMenuButton>
