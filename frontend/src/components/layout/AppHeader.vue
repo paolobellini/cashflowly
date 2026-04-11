@@ -12,11 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Search, Bell, Moon, Sun, Plus } from 'lucide-vue-next'
 import CommandPalette from '@/components/shared/CommandPalette.vue'
@@ -55,7 +51,7 @@ function openCommand() {
       <kbd
         class="hidden md:inline-flex items-center gap-0.5 rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground"
       >
-        {{ isMac ? '⌘' : 'Ctrl' }}K
+        {{ isMac ? '⌘' : 'Ctrl' }} K
       </kbd>
     </button>
 
@@ -121,7 +117,9 @@ function openCommand() {
           <DropdownMenuItem class="text-xs">{{ t('sidebar.nav.profile') }}</DropdownMenuItem>
           <DropdownMenuItem class="text-xs">{{ t('sidebar.nav.settings') }}</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem class="text-xs text-destructive">{{ t('sidebar.logout') }}</DropdownMenuItem>
+          <DropdownMenuItem class="text-xs text-destructive">{{
+            t('sidebar.logout')
+          }}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
