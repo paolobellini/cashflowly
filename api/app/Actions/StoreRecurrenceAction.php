@@ -15,6 +15,11 @@ final readonly class StoreRecurrenceAction
      */
     public function handle(array $attributes): Recurrence
     {
+        /** @var string $transactionDate */
+        $transactionDate = $attributes['date'];
+        /** @var string $startDate */
+        $startDate = $attributes['start_date'];
+
         $recurrence = Recurrence::query()->create([
             'wallet_id' => $attributes['wallet_id'],
             'category_id' => $attributes['category_id'],
@@ -24,7 +29,7 @@ final readonly class StoreRecurrenceAction
             'frequency' => $attributes['frequency'],
             'start_date' => $attributes['start_date'],
             'end_date' => $attributes['end_date'] ?? null,
-            'last_generated_at' => $this->lastGeneratedAt(Carbon::parse($attributes['date']), Carbon::parse($attributes['start_date'])),
+            'last_generated_at' => $this->lastGeneratedAt(Carbon::parse($transactionDate), Carbon::parse($startDate)),
         ]);
 
         Log::info('Recurrence created', ['recurrence_id' => $recurrence->id]);
