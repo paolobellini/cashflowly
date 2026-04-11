@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { Wallet } from '@/types'
 import { cn } from '@/lib/utils'
 import { MOCK_WALLETS } from '@/constants/mockData'
@@ -22,6 +23,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useSidebar } from '@/components/ui/sidebar/utils'
 
+const { t } = useI18n()
 const { state } = useSidebar()
 
 const wallets = ref<Wallet[]>(MOCK_WALLETS)
@@ -55,10 +57,10 @@ function selectWallet(wallet: Wallet | null) {
             </div>
             <div v-if="state !== 'collapsed'" class="flex flex-col items-start min-w-0">
               <span class="text-xs font-bold truncate w-full">
-                {{ activeWallet?.name ?? 'All Wallets' }}
+                {{ activeWallet?.name ?? t('sidebar.wallet.allWallets') }}
               </span>
               <span class="text-[10px] text-muted-foreground font-medium">
-                {{ activeWallet ? 'Active Wallet' : 'Combined View' }}
+                {{ activeWallet ? t('sidebar.wallet.activeWallet') : t('sidebar.wallet.combinedView') }}
               </span>
             </div>
           </div>
@@ -78,7 +80,7 @@ function selectWallet(wallet: Wallet | null) {
         <DropdownMenuLabel
           class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 px-2 py-1"
         >
-          Select Wallet
+          {{ t('sidebar.wallet.selectWallet') }}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
@@ -87,7 +89,7 @@ function selectWallet(wallet: Wallet | null) {
           <div class="size-7 rounded-md bg-muted flex items-center justify-center shrink-0">
             <LayoutGrid class="size-3.5" />
           </div>
-          <span class="text-xs font-bold flex-1">All Wallets</span>
+          <span class="text-xs font-bold flex-1">{{ t('sidebar.wallet.allWallets') }}</span>
           <Check v-if="!activeWallet" class="size-3.5 text-primary" />
         </DropdownMenuItem>
 
@@ -144,7 +146,7 @@ function selectWallet(wallet: Wallet | null) {
           <div class="size-7 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
             <Plus class="size-3.5" />
           </div>
-          <span class="text-xs">Create New Wallet</span>
+          <span class="text-xs">{{ t('sidebar.wallet.createNew') }}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

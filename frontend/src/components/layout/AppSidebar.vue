@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import {
   Sidebar,
   SidebarContent,
@@ -16,13 +17,14 @@ import {
 import { LayoutDashboard, ArrowLeftRight, User, Settings, LogOut } from 'lucide-vue-next'
 import WalletSelector from '@/components/wallets/WalletSelector.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
-  { to: '/profile', label: 'Profile', icon: User },
-  { to: '/settings', label: 'Settings', icon: Settings },
+  { to: '/', labelKey: 'sidebar.nav.dashboard', icon: LayoutDashboard },
+  { to: '/transactions', labelKey: 'sidebar.nav.transactions', icon: ArrowLeftRight },
+  { to: '/profile', labelKey: 'sidebar.nav.profile', icon: User },
+  { to: '/settings', labelKey: 'sidebar.nav.settings', icon: Settings },
 ]
 </script>
 
@@ -40,7 +42,7 @@ const navItems = [
               >
                 <span class="text-sm font-bold">C</span>
               </div>
-              <span class="font-semibold truncate">Cashflowly</span>
+              <span class="font-semibold truncate">{{ t('sidebar.appName') }}</span>
             </router-link>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -63,7 +65,7 @@ const navItems = [
               <SidebarMenuButton
                 as-child
                 :is-active="route.path === item.to"
-                :tooltip="item.label"
+                :tooltip="t(item.labelKey)"
                 :class="
                   route.path === item.to
                     ? 'bg-primary/5 text-primary hover:bg-primary/10 hover:text-primary [&>svg]:text-primary'
@@ -72,7 +74,7 @@ const navItems = [
               >
                 <router-link :to="item.to" class="transition-all duration-200">
                   <component :is="item.icon" />
-                  <span class="text-xs font-medium">{{ item.label }}</span>
+                  <span class="text-xs font-medium">{{ t(item.labelKey) }}</span>
                 </router-link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -85,11 +87,11 @@ const navItems = [
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton
-            tooltip="Logout"
+            :tooltip="t('sidebar.logout')"
             class="text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all duration-200"
           >
             <LogOut />
-            <span>Logout</span>
+            <span>{{ t('sidebar.logout') }}</span>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
