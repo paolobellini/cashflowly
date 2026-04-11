@@ -23,12 +23,15 @@ services:
 
   frontend:
     container_name: cashflowly-frontend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: oven/bun:1
+    working_dir: /app
+    command: sh -c "bun install && bun dev"
     restart: unless-stopped
     ports:
-      - "3000:80"
+      - "3000:5173"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
 
   postgres:
     container_name: cashflowly-postgres
@@ -65,3 +68,4 @@ services:
 
 volumes:
   postgres_data:
+  frontend_node_modules:
