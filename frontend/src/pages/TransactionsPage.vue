@@ -12,6 +12,7 @@ import TransactionList from '@/components/transactions/TransactionList.vue'
 import TransactionPagination from '@/components/transactions/TransactionPagination.vue'
 import TransactionBulkActions from '@/components/transactions/TransactionBulkActions.vue'
 import TransactionForm from '@/components/transactions/TransactionForm.vue'
+import RecurrenceList from '@/components/transactions/RecurrenceList.vue'
 
 const { t } = useI18n()
 
@@ -101,22 +102,30 @@ function handleCloseForm() {
       v-model:view-mode="viewMode"
     />
 
-    <!-- Transaction list -->
-    <TransactionList
+    <!-- Recurrence cards -->
+    <RecurrenceList
+      v-if="activeFilter === 'recurring'"
       :transactions="filteredTransactions"
-      :selected-ids="selectedIds"
-      :view-mode="viewMode"
-      @select="handleSelect"
       @edit="handleEdit"
     />
 
-    <!-- Pagination -->
-    <TransactionPagination
-      v-model:current-page="currentPage"
-      v-model:items-per-page="itemsPerPage"
-      :total-items="filteredTransactions.length"
-      :total-pages="Math.ceil(filteredTransactions.length / itemsPerPage)"
-    />
+    <!-- Transaction list -->
+    <template v-else>
+      <TransactionList
+        :transactions="filteredTransactions"
+        :selected-ids="selectedIds"
+        :view-mode="viewMode"
+        @select="handleSelect"
+        @edit="handleEdit"
+      />
+
+      <TransactionPagination
+        v-model:current-page="currentPage"
+        v-model:items-per-page="itemsPerPage"
+        :total-items="filteredTransactions.length"
+        :total-pages="Math.ceil(filteredTransactions.length / itemsPerPage)"
+      />
+    </template>
 
     <!-- Bulk actions -->
     <TransactionBulkActions

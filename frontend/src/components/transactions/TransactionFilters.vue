@@ -39,7 +39,7 @@ const filterOptions = [
 
 <template>
   <div class="flex flex-wrap gap-3 items-center">
-    <!-- Search -->
+    <!-- Search (left) -->
     <div class="bg-card border border-border/50 rounded-xl p-1 shadow-sm w-full md:w-72 group focus-within:border-primary/30 transition-all">
       <div class="relative flex items-center">
         <Search class="absolute left-3 size-3.5 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -71,76 +71,80 @@ const filterOptions = [
       </button>
     </div>
 
-    <!-- Date & more filters -->
-    <div class="bg-card border border-border/50 rounded-xl p-1 shadow-sm flex items-center gap-1">
-      <DropdownMenu>
-        <DropdownMenuTrigger as-child>
-          <Button variant="ghost" size="sm" class="h-9 gap-2 text-muted-foreground hover:text-foreground rounded-lg px-3">
-            <CalendarIcon class="size-3.5" />
-            <span class="text-xs font-bold">Apr 1 - Apr 30</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" class="w-56 rounded-xl">
-          <DropdownMenuLabel>{{ t('transactions.filters.timePeriod') }}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>{{ t('transactions.filters.last7Days') }}</DropdownMenuItem>
-          <DropdownMenuItem>{{ t('transactions.filters.last30Days') }}</DropdownMenuItem>
-          <DropdownMenuItem>{{ t('transactions.filters.thisMonth') }}</DropdownMenuItem>
-          <DropdownMenuItem>{{ t('transactions.filters.customRange') }}</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+    <!-- Right side -->
+    <div class="flex items-center gap-3 ml-auto">
+      <!-- Date range -->
+      <div class="bg-card border border-border/50 rounded-xl p-1 shadow-sm">
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="ghost" size="sm" class="h-9 gap-2 text-muted-foreground hover:text-foreground rounded-lg px-3">
+              <CalendarIcon class="size-3.5" />
+              <span class="text-xs font-bold">Apr 1 - Apr 30</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" class="w-56 rounded-xl">
+            <DropdownMenuLabel>{{ t('transactions.filters.timePeriod') }}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>{{ t('transactions.filters.last7Days') }}</DropdownMenuItem>
+            <DropdownMenuItem>{{ t('transactions.filters.last30Days') }}</DropdownMenuItem>
+            <DropdownMenuItem>{{ t('transactions.filters.thisMonth') }}</DropdownMenuItem>
+            <DropdownMenuItem>{{ t('transactions.filters.customRange') }}</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-      <div class="h-5 w-px bg-border/50 mx-1" />
+      <!-- More filters -->
+      <div class="bg-card border border-border/50 rounded-xl p-1 shadow-sm">
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="ghost" size="icon" class="h-9 w-9 text-muted-foreground hover:text-foreground rounded-lg">
+              <Filter class="size-3.5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" class="w-64 p-2 rounded-xl">
+            <DropdownMenuLabel class="text-xs font-bold uppercase tracking-widest text-muted-foreground/60 px-2 py-1.5">
+              {{ t('transactions.filters.wallets') }}
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuCheckboxItem :checked="true">Main Wallet</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem :checked="true">Savings</DropdownMenuCheckboxItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel class="text-xs font-bold uppercase tracking-widest text-muted-foreground/60 px-2 py-1.5">
+              {{ t('transactions.filters.sort') }}
+            </DropdownMenuLabel>
+            <DropdownMenuItem class="rounded-lg">{{ t('transactions.filters.newestFirst') }}</DropdownMenuItem>
+            <DropdownMenuItem class="rounded-lg">{{ t('transactions.filters.highestAmount') }}</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger as-child>
-          <Button variant="ghost" size="icon" class="h-9 w-9 text-muted-foreground hover:text-foreground rounded-lg">
-            <Filter class="size-3.5" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" class="w-64 p-2 rounded-xl">
-          <DropdownMenuLabel class="text-xs font-bold uppercase tracking-widest text-muted-foreground/60 px-2 py-1.5">
-            {{ t('transactions.filters.wallets') }}
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuCheckboxItem :checked="true">Main Wallet</DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem :checked="true">Savings</DropdownMenuCheckboxItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuLabel class="text-xs font-bold uppercase tracking-widest text-muted-foreground/60 px-2 py-1.5">
-            {{ t('transactions.filters.sort') }}
-          </DropdownMenuLabel>
-          <DropdownMenuItem class="rounded-lg">{{ t('transactions.filters.newestFirst') }}</DropdownMenuItem>
-          <DropdownMenuItem class="rounded-lg">{{ t('transactions.filters.highestAmount') }}</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-
-    <!-- View mode toggles -->
-    <div class="bg-card border border-border/50 rounded-xl p-1 shadow-sm flex items-center gap-1 ml-auto">
-      <Button
-        variant="ghost"
-        size="icon"
-        :class="cn('h-9 w-9 rounded-lg transition-all', viewMode === 'comfortable' && 'bg-primary/10 text-primary')"
-        @click="viewMode = 'comfortable'"
-      >
-        <LayoutGrid class="size-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        :class="cn('h-9 w-9 rounded-lg transition-all', viewMode === 'ultra-compact' && 'bg-primary/10 text-primary')"
-        @click="viewMode = 'ultra-compact'"
-      >
-        <ArrowUpDown class="size-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        :class="cn('h-9 w-9 rounded-lg transition-all', viewMode === 'board' && 'bg-primary/10 text-primary')"
-        @click="viewMode = 'board'"
-      >
-        <Columns class="size-4" />
-      </Button>
+      <!-- View mode toggles -->
+      <div class="bg-card border border-border/50 rounded-xl p-1 shadow-sm flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="icon"
+          :class="cn('h-9 w-9 rounded-lg transition-all', viewMode === 'comfortable' && 'bg-primary/10 text-primary')"
+          @click="viewMode = 'comfortable'"
+        >
+          <LayoutGrid class="size-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          :class="cn('h-9 w-9 rounded-lg transition-all', viewMode === 'ultra-compact' && 'bg-primary/10 text-primary')"
+          @click="viewMode = 'ultra-compact'"
+        >
+          <ArrowUpDown class="size-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          :class="cn('h-9 w-9 rounded-lg transition-all', viewMode === 'board' && 'bg-primary/10 text-primary')"
+          @click="viewMode = 'board'"
+        >
+          <Columns class="size-4" />
+        </Button>
+      </div>
     </div>
   </div>
 </template>
