@@ -103,7 +103,7 @@ function formatDateHeader(dateStr: string) {
         <div class="h-px bg-border/30 flex-1" />
       </div>
 
-      <div :class="cn('grid transition-all duration-300', viewMode === 'comfortable' ? 'gap-3' : 'gap-0.5')">
+      <div :class="cn('grid transition-all duration-300', viewMode === 'comfortable' ? 'gap-3' : 'gap-2')">
         <TransactionItem
           v-for="transaction in groupedByDate[date]"
           :key="transaction.id"
