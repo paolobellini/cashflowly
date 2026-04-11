@@ -16,4 +16,21 @@ export default {
     },
     logout: 'Esci',
   },
+  header: {
+    newWallet: 'Nuovo Portafoglio',
+    darkMode: 'Tema Scuro',
+    lightMode: 'Tema Chiaro',
+    notifications: 'Notifiche',
+    profile: {
+      myAccount: 'Il Mio Account',
+    },
+  },
+  command: {
+    placeholder: 'Digita un comando o cerca...',
+    noResults: 'Nessun risultato trovato.',
+    navigation: 'Navigazione',
+    actions: 'Azioni',
+    toggleTheme: 'Cambia Tema',
+    searchHint: 'Cerca...',
+  },
 }

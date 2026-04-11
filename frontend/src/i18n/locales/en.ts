@@ -16,4 +16,21 @@ export default {
     },
     logout: 'Logout',
   },
+  header: {
+    newWallet: 'New Wallet',
+    darkMode: 'Dark Mode',
+    lightMode: 'Light Mode',
+    notifications: 'Notifications',
+    profile: {
+      myAccount: 'My Account',
+    },
+  },
+  command: {
+    placeholder: 'Type a command or search...',
+    noResults: 'No results found.',
+    navigation: 'Navigation',
+    actions: 'Actions',
+    toggleTheme: 'Toggle Theme',
+    searchHint: 'Search...',
+  },
 }

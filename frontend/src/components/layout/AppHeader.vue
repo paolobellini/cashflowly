@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Separator } from '@/components/ui/separator'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -18,31 +18,63 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Search, Bell, Moon, Sun } from 'lucide-vue-next'
+import { Search, Bell, Moon, Sun, Plus } from 'lucide-vue-next'
+import CommandPalette from '@/components/shared/CommandPalette.vue'
+
+const { t } = useI18n()
 
 const isDarkMode = ref(false)
+const commandPalette = ref<InstanceType<typeof CommandPalette>>()
+
+const isMac = computed(() => navigator.userAgent.includes('Mac'))
 
 watchEffect(() => {
   document.documentElement.classList.toggle('dark', isDarkMode.value)
 })
+
+function openCommand() {
+  if (commandPalette.value) {
+    commandPalette.value.open = true
+  }
+}
 </script>
 
 <template>
   <header
-    class="flex h-14 shrink-0 items-center gap-2 border-b bg-background/80 backdrop-blur-md px-4"
+    class="flex h-16 shrink-0 items-center gap-2 border-b bg-background/80 backdrop-blur-md px-4"
   >
     <SidebarTrigger class="-ml-1" />
     <Separator orientation="vertical" class="mr-2 !h-4" />
 
-    <div class="relative w-full max-w-sm">
-      <Search class="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
-      <Input
-        placeholder="Search..."
-        class="pl-8 h-8 bg-muted/30 border-none text-xs focus-visible:ring-primary/20"
-      />
-    </div>
+    <button
+      class="relative flex items-center gap-2 w-full max-w-sm h-9 px-3 bg-muted/30 border border-border/50 rounded-lg text-sm text-muted-foreground hover:bg-muted/50 hover:border-border transition-all cursor-pointer"
+      @click="openCommand"
+    >
+      <Search class="size-4 shrink-0" />
+      <span class="flex-1 text-left">{{ t('command.searchHint') }}</span>
+      <kbd
+        class="hidden md:inline-flex items-center gap-0.5 rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground"
+      >
+        {{ isMac ? '⌘' : 'Ctrl' }}K
+      </kbd>
+    </button>
 
     <div class="ml-auto flex items-center gap-2">
+      <Tooltip>
+        <TooltipTrigger as-child>
+          <Button
+            variant="ghost"
+            size="icon"
+            class="size-8 rounded-md text-primary hover:text-primary hover:bg-primary/10"
+          >
+            <Plus class="size-4" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">{{ t('header.newWallet') }}</TooltipContent>
+      </Tooltip>
+
+      <Separator orientation="vertical" class="!h-4 mx-1" />
+
       <Tooltip>
         <TooltipTrigger as-child>
           <Button
@@ -56,7 +88,7 @@ watchEffect(() => {
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom">
-          {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+          {{ isDarkMode ? t('header.lightMode') : t('header.darkMode') }}
         </TooltipContent>
       </Tooltip>
 
@@ -69,7 +101,7 @@ watchEffect(() => {
             />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="bottom">Notifications</TooltipContent>
+        <TooltipContent side="bottom">{{ t('header.notifications') }}</TooltipContent>
       </Tooltip>
 
       <Separator orientation="vertical" class="!h-4 mx-1" />
@@ -84,14 +116,16 @@ watchEffect(() => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="w-48">
-          <DropdownMenuLabel class="text-xs">My Account</DropdownMenuLabel>
+          <DropdownMenuLabel class="text-xs">{{ t('header.profile.myAccount') }}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem class="text-xs">Profile</DropdownMenuItem>
-          <DropdownMenuItem class="text-xs">Settings</DropdownMenuItem>
+          <DropdownMenuItem class="text-xs">{{ t('sidebar.nav.profile') }}</DropdownMenuItem>
+          <DropdownMenuItem class="text-xs">{{ t('sidebar.nav.settings') }}</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem class="text-xs text-destructive">Log out</DropdownMenuItem>
+          <DropdownMenuItem class="text-xs text-destructive">{{ t('sidebar.logout') }}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   </header>
+
+  <CommandPalette ref="commandPalette" />
 </template>
