@@ -24,7 +24,7 @@ import {
 const { t } = useI18n()
 
 const searchQuery = defineModel<string>('searchQuery', { default: '' })
-const activeFilter = defineModel<'all' | 'income' | 'expense'>('activeFilter', { default: 'all' })
+const activeFilter = defineModel<'all' | 'income' | 'expense' | 'recurring'>('activeFilter', { default: 'all' })
 const viewMode = defineModel<'comfortable' | 'ultra-compact' | 'board'>('viewMode', {
   default: 'comfortable',
 })
@@ -33,6 +33,7 @@ const filterOptions = [
   { value: 'all' as const, labelKey: 'transactions.filters.all' },
   { value: 'income' as const, labelKey: 'transactions.filters.income' },
   { value: 'expense' as const, labelKey: 'transactions.filters.expense' },
+  { value: 'recurring' as const, labelKey: 'transactions.filters.recurring' },
 ]
 </script>
 

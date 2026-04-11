@@ -52,6 +52,7 @@ export default {
       all: 'Tutte',
       income: 'Entrate',
       expense: 'Uscite',
+      recurring: 'Ricorrenti',
       timePeriod: 'Periodo',
       last7Days: 'Ultimi 7 Giorni',
       last30Days: 'Ultimi 30 Giorni',
