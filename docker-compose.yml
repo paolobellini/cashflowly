@@ -21,6 +21,15 @@ services:
       redis:
         condition: service_healthy
 
+  frontend:
+    container_name: cashflowly-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+
   postgres:
     container_name: cashflowly-postgres
     image: postgres:17-alpine
