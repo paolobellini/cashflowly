@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { TransactionWithDetails } from '@/types'
 import { MOCK_TRANSACTIONS } from '@/constants/mockData'
@@ -7,8 +7,10 @@ import { Plus, Download } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import PageHeader from '@/components/shared/PageHeader.vue'
 import TransactionStats from '@/components/transactions/TransactionStats.vue'
+import TransactionStatsSkeleton from '@/components/transactions/TransactionStatsSkeleton.vue'
 import TransactionFilters from '@/components/transactions/TransactionFilters.vue'
 import TransactionList from '@/components/transactions/TransactionList.vue'
+import TransactionListSkeleton from '@/components/transactions/TransactionListSkeleton.vue'
 import TransactionPagination from '@/components/transactions/TransactionPagination.vue'
 import TransactionBulkActions from '@/components/transactions/TransactionBulkActions.vue'
 import TransactionForm from '@/components/transactions/TransactionForm.vue'
@@ -16,7 +18,15 @@ import RecurrenceList from '@/components/transactions/RecurrenceList.vue'
 
 const { t } = useI18n()
 
-const transactions = ref<TransactionWithDetails[]>(MOCK_TRANSACTIONS)
+const isLoading = ref(true)
+const transactions = ref<TransactionWithDetails[]>([])
+
+onMounted(async () => {
+  // Simulate API loading — replace with real fetch later
+  await new Promise((resolve) => setTimeout(resolve, 1500))
+  transactions.value = MOCK_TRANSACTIONS
+  isLoading.value = false
+})
 const selectedIds = ref<string[]>([])
 const isFormOpen = ref(false)
 const editingTransaction = ref<TransactionWithDetails | null>(null)
@@ -93,7 +103,8 @@ function handleCloseForm() {
     </div>
 
     <!-- Stats -->
-    <TransactionStats :transactions="filteredTransactions" />
+    <TransactionStatsSkeleton v-if="isLoading" />
+    <TransactionStats v-else :transactions="filteredTransactions" />
 
     <!-- Filters -->
     <TransactionFilters
@@ -102,9 +113,12 @@ function handleCloseForm() {
       v-model:view-mode="viewMode"
     />
 
+    <!-- Loading skeleton -->
+    <TransactionListSkeleton v-if="isLoading" />
+
     <!-- Recurrence cards -->
     <RecurrenceList
-      v-if="activeFilter === 'recurring'"
+      v-else-if="activeFilter === 'recurring'"
       :transactions="filteredTransactions"
       @edit="handleEdit"
     />
