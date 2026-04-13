@@ -2,18 +2,13 @@
 import type { TransactionWithDetails } from '@/types'
 import { useI18n } from 'vue-i18n'
 import { cn } from '@/lib/utils'
-import { MoreVertical, Edit2, Trash2 } from 'lucide-vue-next'
-
-const { t } = useI18n()
+import { Edit2, Trash2 } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import CategoryIcon from '@/components/shared/CategoryIcon.vue'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   transaction: TransactionWithDetails
@@ -74,21 +69,34 @@ function formatAmount(amount: number, currency: string) {
         {{ isIncome ? '+' : '-' }}{{ formatAmount(transaction.amount, transaction.wallet.currency) }}
       </div>
 
-      <DropdownMenu @click.stop>
-        <DropdownMenuTrigger as-child>
-          <Button variant="ghost" size="icon" class="h-7 w-7 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
-            <MoreVertical class="size-3" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" class="w-40">
-          <DropdownMenuItem class="gap-2" @click="emit('edit', transaction)">
-            <Edit2 class="size-3.5" /> {{ t('transactions.item.edit') }}
-          </DropdownMenuItem>
-          <DropdownMenuItem class="gap-2 text-destructive focus:text-destructive" @click="emit('delete', transaction)">
-            <Trash2 class="size-3.5" /> {{ t('transactions.item.delete') }}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div class="flex items-center gap-1" @click.stop>
+        <Tooltip>
+          <TooltipTrigger as-child>
+            <Button
+              variant="ghost"
+              size="icon"
+              class="h-7 w-7 rounded-md text-muted-foreground hover:text-foreground"
+              @click="emit('edit', transaction)"
+            >
+              <Edit2 class="size-3" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{{ t('transactions.item.edit') }}</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger as-child>
+            <Button
+              variant="ghost"
+              size="icon"
+              class="h-7 w-7 rounded-md text-muted-foreground hover:text-destructive"
+              @click="emit('delete', transaction)"
+            >
+              <Trash2 class="size-3" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{{ t('transactions.item.delete') }}</TooltipContent>
+        </Tooltip>
+      </div>
     </div>
   </div>
 
@@ -171,30 +179,38 @@ function formatAmount(amount: number, currency: string) {
     <div
       :class="
         cn(
-          'opacity-0 group-hover:opacity-100 transition-opacity ml-2',
-          viewMode === 'ultra-compact' ? 'hidden sm:block' : '',
+          'flex items-center gap-1 ml-2',
+          viewMode === 'ultra-compact' ? 'hidden sm:flex' : '',
         )
       "
+      @click.stop
     >
-      <DropdownMenu @click.stop>
-        <DropdownMenuTrigger as-child>
+      <Tooltip>
+        <TooltipTrigger as-child>
           <Button
             variant="ghost"
             size="icon"
-            :class="cn('rounded-md', viewMode === 'ultra-compact' ? 'h-6 w-6' : 'h-8 w-8')"
+            :class="cn('rounded-md text-muted-foreground hover:text-foreground', viewMode === 'ultra-compact' ? 'h-6 w-6' : 'h-8 w-8')"
+            @click="emit('edit', transaction)"
           >
-            <MoreVertical :class="viewMode === 'ultra-compact' ? 'size-3' : 'size-3.5'" />
+            <Edit2 :class="viewMode === 'ultra-compact' ? 'size-3' : 'size-3.5'" />
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" class="w-40">
-          <DropdownMenuItem class="gap-2" @click="emit('edit', transaction)">
-            <Edit2 class="size-3.5" /> {{ t('transactions.item.edit') }}
-          </DropdownMenuItem>
-          <DropdownMenuItem class="gap-2 text-destructive focus:text-destructive" @click="emit('delete', transaction)">
-            <Trash2 class="size-3.5" /> {{ t('transactions.item.delete') }}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">{{ t('transactions.item.edit') }}</TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger as-child>
+          <Button
+            variant="ghost"
+            size="icon"
+            :class="cn('rounded-md text-muted-foreground hover:text-destructive', viewMode === 'ultra-compact' ? 'h-6 w-6' : 'h-8 w-8')"
+            @click="emit('delete', transaction)"
+          >
+            <Trash2 :class="viewMode === 'ultra-compact' ? 'size-3' : 'size-3.5'" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">{{ t('transactions.item.delete') }}</TooltipContent>
+      </Tooltip>
     </div>
   </div>
 </template>
