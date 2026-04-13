@@ -20,10 +20,10 @@ defineProps<{
       <h3 class="text-2xl font-black mt-1">{{ value }}</h3>
     </div>
     <div
-      class="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+      class="size-10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform"
       :class="iconClass ?? 'bg-primary/10 text-primary'"
     >
-      <component :is="icon" class="size-5" />
+      <component :is="icon" class="size-4" />
     </div>
   </div>
 </template>
