@@ -29,4 +29,4 @@ COPY --from=deps /app .
 ENV OCTANE_WORKERS=4
 ENV OCTANE_MAX_REQUESTS=500
 
-ENTRYPOINT php artisan optimize && php artisan octane:frankenphp --workers=${OCTANE_WORKERS} --max-requests=${OCTANE_MAX_REQUESTS}
+ENTRYPOINT php artisan config:cache && php artisan route:cache && php artisan event:cache && php artisan octane:frankenphp --workers=${OCTANE_WORKERS} --max-requests=${OCTANE_MAX_REQUESTS}
